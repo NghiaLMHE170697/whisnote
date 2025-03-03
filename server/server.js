@@ -41,7 +41,7 @@ app.use(
 // 🌍 CORS - Hỗ trợ cả dev và production
 app.use(
     cors({
-        origin: process.env.CLIENT_URL || "http://localhost:3000",
+        origin: process.env.CLIENT_URL || "https://whisnote-client.vercel.app",
         methods: ["GET", "POST", "DELETE", "UPDATE", "PUT", "PATCH"],
         credentials: true,
     })
