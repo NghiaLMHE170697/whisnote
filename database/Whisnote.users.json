@@ -1,0 +1,104 @@
+[{
+  "_id": {
+    "$oid": "67c314fd6d2a1c478da766ae"
+  },
+  "phone": null,
+  "password": "$2b$10$nUcdGdJSNNxtrj/aVfbiLeykr82eMmvzVFmMe6pdSY/Pwopf1qhoe",
+  "username": "NghiaLM8",
+  "email": "nghiachen1312@gmail.com",
+  "avatar": "https://randomuser.me/api/portraits/men/75.jpg",
+  "role": "free",
+  "premium_expiry": null,
+  "post_count": 0,
+  "followers": [],
+  "following": [],
+  "otp": null,
+  "otp_expiry": null,
+  "is_verified": false,
+  "preferences": [],
+  "createdAt": {
+    "$date": "2025-03-01T14:09:01.431Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-01T14:09:01.431Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67c31ab52bdc5c864da024a3"
+  },
+  "phone": null,
+  "password": "$2b$10$RHh3UWKqcDP6zXaNlGNH0enKy.yJLP6IGW3Qva8Se4vMm9P0zXg6.",
+  "username": "HieuLM123",
+  "email": "nghialmhe170697@fpt.edu.vn",
+  "avatar": "https://randomuser.me/api/portraits/women/50.jpg",
+  "role": "free",
+  "premium_expiry": null,
+  "post_count": 0,
+  "followers": [],
+  "following": [],
+  "otp": null,
+  "otp_expiry": null,
+  "is_verified": false,
+  "preferences": [],
+  "createdAt": {
+    "$date": "2025-03-01T14:33:25.574Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-01T14:33:25.574Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67c31b862bdc5c864da024af"
+  },
+  "phone": null,
+  "password": "$2b$10$uew5JoskhH6UuloO90QSWeIy9uMoeOoURuNHP8Xrh4.sbVS2rd4Gu",
+  "username": "HaiNTHD12",
+  "email": "nghialm8@fpt.com",
+  "avatar": "https://randomuser.me/api/portraits/men/30.jpg",
+  "role": "free",
+  "premium_expiry": null,
+  "post_count": 0,
+  "followers": [],
+  "following": [],
+  "otp": null,
+  "otp_expiry": null,
+  "is_verified": false,
+  "preferences": [],
+  "createdAt": {
+    "$date": "2025-03-01T14:36:54.965Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-01T14:36:54.965Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67c3225b9e554912f32313d0"
+  },
+  "phone": null,
+  "password": "$2b$10$224qUjIR95O45QMbvZmHmuBxJm1oNFNqNO2Uqs5XUnsSQ43NYZCk2",
+  "username": "Le Minh Nghia",
+  "email": "abcdef@gmail.com",
+  "avatar": null,
+  "role": "free",
+  "premium_expiry": null,
+  "post_count": 0,
+  "followers": [],
+  "following": [],
+  "otp": null,
+  "otp_expiry": null,
+  "is_verified": false,
+  "preferences": [],
+  "createdAt": {
+    "$date": "2025-03-01T15:06:03.926Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-01T15:06:03.926Z"
+  },
+  "__v": 0
+}]

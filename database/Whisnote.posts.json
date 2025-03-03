@@ -1,0 +1,126 @@
+[{
+  "_id": "65c31b862bdc5c864da02501",
+  "user_id": { "$oid": "67c314fd6d2a1c478da766ae" },
+  "content": "Hôm nay là một ngày đặc biệt khi tôi quyết định dành trọn buổi sáng để sắp xếp lại góc làm việc. Từng chồng sách cũ được lau bụi, những tờ giấy nhớ màu vàng đã phai màu theo năm tháng được thay thế bằng phiên bản mới. Trong lúc dọn dẹp, tôi tình cờ tìm thấy cuốn nhật ký năm 18 tuổi - những dòng chữ ngây ngô về ước mơ trở thành nhà văn khiến tôi bật cười. Chiều đến, tôi ngồi pha ấm trà oolong, nhâm nhi cùng vài chiếc bánh quy tự làm, lắng nghe tiếng mưa rơi lộp độp trên mái hiên. Có lẽ cuộc sống êm đềm chính là những khoảnh khắc như thế này, khi ta biết trân trọng sự bình yên giữa bộn bề. Tối nay, tôi sẽ viết tiếp chương mới cho cuốn tiểu thuyết đang dang dở - một câu chuyện về tuổi trẻ và những lựa chọn quan trọng của đời người.",
+  "category": "Cuộc sống hằng ngày",
+  "privacy": "public",
+  "medias": []
+},
+{
+  "_id": "65c31b862bdc5c864da02502",
+  "user_id": { "$oid": "67c31ab52bdc5c864da024a3" },
+  "content": "Sáng chủ nhật bắt đầu bằng phiên chợ quê sớm tinh mơ. Tôi cùng mẹ chọn những bó rau muống còn đọng sương đêm, vài quả cà tím bóng mượt, cùng cân thịt ba chỉ tươi hồng. Trở về nhà, cả gia đình quây quần trong bếp chuẩn bị bữa trưa. Bố phụ trách kho cá, mẹ trổ tài làm canh chua, trong khi tôi lo phần rau xào. Mùi hành phi thơm lừng hòa quyện với tiếng cười đùa của lũ trẻ đang chơi trong sân. Bữa cơm trở nên ấm cúng lạ thường khi có đủ ba thế hệ cùng ngồi bên mâm. Chiều nay, tôi dành thời gian dạy bé Mai cách gấp hạc giấy - kỷ niệm tuổi thơ của chính tôi giờ được truyền lại cho thế hệ sau. Cuộc sống gia đình đôi khi chỉ cần đơn giản thế thôi, nhưng đó mới chính là hạnh phúc đích thực.",
+  "category": "Cuộc sống hằng ngày",
+  "privacy": "public",
+  "medias": [
+    {
+      "type": "Image",
+      "url": "https://picsum.photos/600/400?image=201"
+    }
+  ]
+},
+{
+  "_id": "65c31b862bdc5c864da02503",
+  "user_id": { "$oid": "67c31b862bdc5c864da024af" },
+  "content": "Hôm nay là ngày đầu tiên tôi thử nghiệm lối sống không công nghệ. Không điện thoại, không laptop, chỉ có chiếc đồng hồ cơ và quyển sổ tay cũ. Buổi sáng bắt đầu bằng việc vẽ lại bản đồ khu phố bằng bút chì, phát hiện ra con ngõ nhỏ có hàng hoa giấy rực rỡ mà trước giờ vô tình bỏ qua. Trưa đến, tôi học cách ghi nhớ công thức nấu ăn thay vì tra Google, nhận ra khứu giác và vị giác trở nên tinh nhạy lạ thường. Chiều tối, thay vì lướt mạng xã hội, tôi viết thư tay gửi cho người bạn thân ở xa. Những nét chữ nguệch ngoạc trên phong bì khiến tôi nhớ thời sinh viên. Một ngày không màn hình đã dạy tôi bài học quý giá: đôi khi ngắt kết nối ảo lại chính là cách kết nối sâu sắc nhất với thế giới thực.",
+  "category": "Cuộc sống hằng ngày",
+  "privacy": "public",
+  "medias": []
+},
+{
+  "_id": "65c31b862bdc5c864da02504",
+  "user_id": { "$oid": "67c314fd6d2a1c478da766ae" },
+  "content": "Mùa mưa đến mang theo cái lạnh se se của tiết trời tháng Chín. Sáng nay tôi thức dậy sớm hơn thường lệ, chuẩn bị mâm cỗ cúng ông Táo thật tươm tất. Từng chiếc bánh chưng xanh được gói cẩn thận, nải chuối vàng ruộm được xếp ngay ngắn. Trong lúc lau dọn bàn thờ, tôi chợt nhớ những lời dạy của bà nội ngày xưa về việc giữ gìn nếp nhà. Chiều xuống, cả xóm cùng nhau quét dọn ngõ phố, tiếng chổi tre sột soạt hòa cùng tiếng cười giòn tan của mấy đứa trẻ. Tối đến, ngồi bên mâm cơm ấm cúng với món canh măng chua cá hồi - hương vị tuổi thơ bỗng ùa về nguyên vẹn. Cuộc sống dù có hiện đại đến đâu, những giá trị truyền thống vẫn là sợi dây vô hình gắn kết tâm hồn ta với quá khứ.",
+  "category": "Cuộc sống hằng ngày",
+  "privacy": "public",
+  "medias": [
+    {
+      "type": "Image",
+      "url": "https://picsum.photos/600/400?image=202"
+    },
+    {
+      "type": "Image",
+      "url": "https://picsum.photos/600/400?image=203"
+    }
+  ]
+},
+{
+  "_id": "65c31b862bdc5c864da02505",
+  "user_id": { "$oid": "67c31ab52bdc5c864da024a3" },
+  "content": "Hôm nay tôi quyết định thực hiện thử thách 10.000 bước chân mỗi ngày. Bắt đầu từ con đường ven hồ quen thuộc, đôi chân dẫn tôi đến những ngóc ngách mới lạ của thành phố. Phát hiện ra quán cà phê nhỏ ẩn mình sau rặng bằng lăng tím, nơi bác chủ quán ân cần mời thử món bánh flan đặc biệt. Trên đường về, tôi dừng chân mua cho mẹ bó hoa cúc trắng - loài hoa bà vẫn yêu thích. Chiều đến, cùng em trai sửa lại chiếc xe đạp cũ, những giọt mồ hôi rơi xuống hòa cùng tiếng cười khúc khích. Cuối ngày, ngồi ghi lại những trải nghiệm vào nhật ký, tôi chợt nhận ra hạnh phúc đôi khi chỉ đơn giản là được sống trọn vẹn từng phút giây, không vội vã, không lo toan.",
+  "category": "Cuộc sống hằng ngày",
+  "privacy": "public",
+  "medias": [
+    {
+      "type": "Image",
+      "url": "https://picsum.photos/600/400?image=204"
+    }
+  ]
+},
+{
+  "_id": "65c31b862bdc5c864da02506",
+  "user_id": { "$oid": "67c31b862bdc5c864da024af" },
+  "content": "Ngày cuối tuần dành cho dự án trồng rau sạch trên sân thượng. Từ sáng sớm đã ra chợ mua đất tribat, phân trùn quế và các loại hạt giống. Cả buổi chiều miệt mài xới đất, gieo hạt, dựng giàn leo cho mướp. Lần đầu tiên tự tay ươm mầm mới thấu hiểu sự vất vả của nhà nông. Khi những giọt mồ hôi rơi xuống luống đất, tôi chợt nhớ lời ông nội ngày xưa: Cây cỏ cũng biết đền ơn người chăm bẵm. Tối đến, ngồi uống trà và lên kế hoạch làm hệ thống tưới tự động. Hy vọng vài tháng nữa, góc sân thượng nhỏ sẽ xanh mướt rau quả, mang đến bữa ăn an toàn cho cả gia đình. Cuộc sống đô thị bận rộn vẫn có thể tìm thấy sự bình yên từ những điều giản dị như thế.",
+  "category": "Cuộc sống hằng ngày",
+  "privacy": "public",
+  "medias": []
+},
+{
+  "_id": "65c31b862bdc5c864da02507",
+  "user_id": { "$oid": "67c314fd6d2a1c478da766ae" },
+  "content": "Hôm nay là ngày hội ngộ của nhóm bạn cấp ba. Sau 10 năm xa cách, chúng tôi tụ tập tại quán cà phê cũ - nơi ngày xưa hay trốn học đến ngồi. Những câu chuyện về thời áo trắng được kể lại trong tiếng cười ròn rã. Ai ngờ cậu bé nghịch ngợm ngày nào giờ đã là bác sĩ, cô bạn nhút nhát nhất lớp lại trở thành MC nổi tiếng. Chiều muộn, cả nhóm cùng đến thăm ngôi trường xưa, chạm tay vào hàng phượng già vẫn còn nguyên vết khắc tên thuở nào. Khi hoàng hôn buông xuống, chúng tôi hứa sẽ không để mất liên lạc lần nữa. Trở về nhà, lật giở lại trang lưu bút vàng ố, tôi thầm cảm ơn những người bạn đã cùng mình viết nên chương đẹp nhất của tuổi trẻ.",
+  "category": "Cuộc sống hằng ngày",
+  "privacy": "public",
+  "medias": [
+    {
+      "type": "Image",
+      "url": "https://picsum.photos/600/400?image=208"
+    },
+    {
+      "type": "Image",
+      "url": "https://picsum.photos/600/400?image=206"
+    },
+    {
+      "type": "Image",
+      "url": "https://picsum.photos/600/400?image=209"
+    }
+  ]
+},
+{
+  "_id": "65c31b862bdc5c864da02508",
+  "user_id": { "$oid": "67c31ab52bdc5c864da024a3" },
+  "content": "Một ngày làm tình nguyện viên tại trung tâm bảo trợ trẻ em đã cho tôi nhiều bài học quý giá. Sáng sớm cùng các em nhỏ tập thể dục, chuẩn bị bữa ăn dinh dưỡng. Chiều đến, hướng dẫn các em vẽ tranh bằng màu nước - những bức hình ngây ngô nhưng chứa đầy ước mơ trong sáng. Cậu bé Hoàng 7 tuổi với đôi mắt sáng ngời khoe: Em sẽ vẽ ngôi nhà có đủ ba mẹ. Câu nói ấy khiến trái tim tôi thắt lại. Tối về, ngồi xem lại những bức ảnh chụp cùng các em, tôi nhận ra hạnh phúc thực sự không nằm ở những thứ ta có, mà ở những gì ta có thể cho đi. Cuộc sống này vẫn còn bao mảnh đời cần lắm vòng tay chia sẻ và yêu thương.",
+  "category": "Cuộc sống hằng ngày",
+  "privacy": "public",
+  "medias": []
+},
+{
+  "_id": "65c31b862bdc5c864da02509",
+  "user_id": { "$oid": "67c31b862bdc5c864da024af" },
+  "content": "Hôm nay đánh dấu chuyến đi chơi xa đầu tiên của bé Mi sau dịch. Từ sáng sớm, cả nhà đã chuẩn bị đồ đạc cẩn thận cho chuyến dã ngoại tại vườn quốc gia. Trên đường đi, bé không ngừng hỏi những câu ngây ngô: Mẹ ơi, con nai có biết nói không?. Đến nơi, cả gia đình cùng đi bộ đường dài, hái nấm rừng và nhặt hạt dẻ. Buổi trưa ăn cơm nắm muối vừng dưới tán cây cổ thụ, tiếng chim hót véo von như bản nhạc thiên nhiên. Chiều xuống, dạy bé cách thả diều trên đồng cỏ, nhìn con chạy nhảy hồn nhiên mà lòng tràn ngập niềm vui. Khi mặt trời lặn, cả nhà quây quần bên đống lửa trại, kể cho nhau nghe những câu chuyện cổ tích. Một ngày mệt nhoài nhưng tràn đầy tiếng cười - kỷ niệm đẹp sẽ còn mãi trong ký ức gia đình.",
+  "category": "Cuộc sống hằng ngày",
+  "privacy": "public",
+  "medias": [
+    {
+      "type": "Image",
+      "url": "https://picsum.photos/600/400?image=208"
+    }
+  ]
+},
+{
+  "_id": "65c31b862bdc5c864da02510",
+  "user_id": { "$oid": "67c314fd6d2a1c478da766ae" },
+  "content": "Ngày cuối năm bận rộn với công việc dọn dẹp nhà cửa. Trong lúc sắp xếp lại tủ sách cũ, tôi tìm thấy chiếc hộp thiếc chứa đầy thư tay thời yêu xa. Từng con chữ nguệch ngoạc trên giấy hoa tiên gợi nhớ về mối tình đầu ngây ngô. Chiều đến, cùng mẹ gói bánh chưng, đôi tay vụng về khiến chiếc bánh méo mó nhưng chứa đầy tình cảm. Tối giao thừa, cả nhà quây quần xem pháo hoa, tiếng chuông chùa văng vẳng đâu đó. Tôi chợt nhận ra thời gian trôi qua nhanh thật, nhưng những giá trị gia đình vẫn nguyên vẹn như thuở nào. Năm mới sắp đến, ước mong duy nhất của tôi là bố mẹ luôn khỏe mạnh, anh chị em đoàn tụ đầy đủ. Cuộc sống dẫu có xô bồ đến mấy, chỉ cần có nhau là đủ ấm lòng.",
+  "category": "Cuộc sống hằng ngày",
+  "privacy": "private",
+  "medias": [
+    {
+      "type": "Image",
+      "url": "https://picsum.photos/600/400?image=209"
+    },
+    {
+      "type": "Image",
+      "url": "https://picsum.photos/600/400?image=210"
+    }
+  ]
+}]

@@ -1,0 +1,27 @@
+/* PostForm.css: Animation doesn't work */
+.image-preview {
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.8); /* Start smaller */
+  transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out, transform 0.5s ease-in-out;
+  max-width: 200px;
+  height: auto;
+  margin-top: 10px;
+}
+
+.image-preview.show {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1); /* Scale to normal size */
+}
+
+.postForm-closeBtn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}

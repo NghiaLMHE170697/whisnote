@@ -1,0 +1,37 @@
+[
+    {
+      "_id": { "$oid": "67b05652baf6b3e45998c6c1" },
+      "name": "Cuộc sống hằng ngày",
+      "description": "Nhật ký về những sự kiện, cảm xúc trong ngày."
+    },
+    {
+      "_id": { "$oid": "67b05652baf6b3e45998c6c2" },
+      "name": "Công việc",
+      "description": "Ghi chép về công việc, những dự án, mục tiêu nghề nghiệp."
+    },
+    {
+      "_id": { "$oid": "67b05652baf6b3e45998c6c3" },
+      "name": "Gia đình",
+      "description": "Những khoảnh khắc, kỷ niệm với gia đình."
+    },
+    {
+      "_id": { "$oid": "67b05652baf6b3e45998c6c4" },
+      "name": "Tình yêu",
+      "description": "Cảm xúc, câu chuyện tình yêu của bạn."
+    },
+    {
+      "_id": { "$oid": "67b05652baf6b3e45998c6c5" },
+      "name": "Bạn bè",
+      "description": "Những cuộc gặp gỡ, chia sẻ cùng bạn bè."
+    },
+    {
+      "_id": { "$oid": "67b05652baf6b3e45998c6c6" },
+      "name": "Học tập",
+      "description": "Ghi chép về quá trình học tập, nghiên cứu."
+    },
+    {
+      "_id": { "$oid": "67b05652baf6b3e45998c6c7" },
+      "name": "Sức khỏe & Thể dục",
+      "description": "Nhật ký về chế độ ăn uống, tập luyện, sức khỏe."
+    }
+  ]
