@@ -66,7 +66,7 @@ const Feed = () => {
                                             {post.username}
                                         </a>
                                         <span className="ms-2 text-muted">{post.createdAt}</span>
-                                        <p className="mt-2 ms-3" onClick={() => nav(`/post/${post.id}`)}>
+                                        <p className="mt-2 ms-3" onClick={nav(`/post/${post.id}`)}>
                                             {post.content}
                                         </p>
                                         {post.medias.length > 0 && (
@@ -85,10 +85,10 @@ const Feed = () => {
                                         <div className="desc ms-3">
                                             <a className="text-decoration-none text-dark me-2" onClick={() => handleLike(post.id)}>
                                                 <i className={`bi ${post?.liked ? "bi-heart-fill" : "bi-heart"} me-2 text-danger`}></i>
-                                                {post?.likesCount != 0 ? post?.likesCount : ""} Love
+                                                {post?.likesCount !== 0 ? post?.likesCount : ""} Love
                                             </a>
                                             <a href={`/post/${post.id}`} className="text-decoration-none text-dark me-2" >
-                                                <i className={`bi bi-chat-square-dots me-2 text-danger`}></i>
+                                                <i className="bi bi-chat-square-dots me-2 text-danger"></i>
                                                 Comment
                                             </a>
                                         </div>
