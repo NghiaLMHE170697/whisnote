@@ -48,13 +48,13 @@ app.use(
 );
 
 // ⚡ Rate Limit (Hạn chế DDoS Attack)
-const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 phút
-    max: 100, // 100 requests per 15 minutes
-    message: "Too many requests from this IP, please try again later.",
-});
+// const limiter = rateLimit({
+//     windowMs: 15 * 60 * 1000, // 15 phút
+//     max: 100, // 100 requests per 15 minutes
+//     message: "Too many requests from this IP, please try again later.",
+// });
 
-app.use(limiter);
+// app.use(limiter);
 
 // 🖼️ Cho phép phục vụ ảnh từ thư mục "uploads"
 app.use("/uploads", express.static("uploads"));

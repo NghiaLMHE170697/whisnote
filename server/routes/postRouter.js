@@ -25,7 +25,9 @@ const upload = multer({
 router.post("/create", upload.array('medias'), postController.createPost);
 router.put("/:id", isAuthorized, upload.array("images", 3), postController.updatePost);
 router.delete("/:id", isAuthorized, postController.deletePost);
-router.get("/public", postController.getPublicPosts); // 🟢 Route mới để lấy bài viết Public
+router.get("/public/:userId", postController.getPublicPosts); // 🟢 Route mới để lấy bài viết Public
 router.get("/profile/:userId/:currentUserId", postController.getProfilePosts); // 🟢 Route mới để lấy bài viết Private
+router.get("/:postId/:userId", postController.getPostById);
+router.post("/like/:postId", postController.updateLikePost);
 
 module.exports = router;

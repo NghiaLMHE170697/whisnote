@@ -1,9 +1,5 @@
 const mongoose = require("mongoose");
 
-
-const LikeSchema = new mongoose.Schema({
-    user_id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-}, { timestamps: true });
 const MediaSchema = new mongoose.Schema({
     type: {
         type: String, enum: ["Image"],
@@ -26,7 +22,8 @@ const PostSchema = new mongoose.Schema(
         content: { type: String, required: true },
         category: { type: String, required: true },
         privacy: { type: String, enum: ["public", "private"], default: "private" },
-        likes: [LikeSchema],
+        likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+        likesCount:{ type: Number, default: 0, min: [0, "Likes count must be at least 0"] },
         medias: [MediaSchema],
     },
     { timestamps: true }

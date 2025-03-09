@@ -1,9 +1,10 @@
 const Post = require("../models/Post");
 const Category = require("../models/Category");
 const { uploadImageFile } = require("../cloudFly.config/objectStorage");
+const { getTimeDifference, getVietNamDateFormat } = require("../middleware/general.middleware");
 
 // Common post transformation logic
-const transformPost = (post) => ({
+const transformPost = (post, userId) => ({
   id: post._id,
   userId: post.user_id._id,
   username: post.user_id.username,
@@ -11,7 +12,11 @@ const transformPost = (post) => ({
   content: post.content,
   category: post.category,
   privacy: post.privacy,
-  medias: post.medias.map(media => ({ url: media.url }))
+  medias: post.medias.map(media => ({ url: media.url })),
+  likesCount: post.likesCount,
+  likers: post.likes,
+  liked: userId ? post.likes.includes(userId) : false,
+  createdAt: getVietNamDateFormat(post.createdAt),
 });
 
 // Controller functions
@@ -94,14 +99,17 @@ const createPost = async (req, res) => {
 
 const getPublicPosts = async (req, res) => {
   try {
+    const { userId } = req.params;
     const posts = await Post.find({ privacy: "public" })
       .populate("category", "name")
       .populate("user_id", "username avatar")
       .sort({ createdAt: -1 });
 
+
+
     res.status(200).json({
       status: "success",
-      data: posts.map(transformPost)
+      data: posts.map(m => transformPost(m, userId))
     });
   } catch (error) {
     console.error("Get public posts error:", error);
@@ -127,7 +135,7 @@ const getProfilePosts = async (req, res) => {
 
     res.status(200).json({
       status: "success",
-      data: posts.map(transformPost)
+      data: posts.map(m => transformPost(m, currentUserId))
     });
   } catch (error) {
     console.error("Get profile posts error:", error);
@@ -185,10 +193,80 @@ const deletePost = async (req, res) => {
   }
 };
 
+const updateLikePost = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const { postId } = req.params;
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" })
+    } else {
+      const alreadyLiked = post.likes.includes(userId);
+      let updateLikePost;
+      if (alreadyLiked) {
+        updateLikePost = await Post.findByIdAndUpdate(
+          postId,
+          {
+            $pull: { likes: userId },
+            $inc: { likesCount: -1 }
+          },
+          { new: true }
+        )
+        return res.status(200).json({
+          status: 200,
+          message: "Unlike post successfully",
+          likesCount: updateLikePost.likesCount,
+          liked: false
+        })
+      } else if (!alreadyLiked) {
+        updateLikePost = await Post.findByIdAndUpdate(
+          postId,
+          {
+            $push: { likes: userId },
+            $inc: { likesCount: 1 }
+          },
+          { new: true }
+        )
+        return res.status(200).json({
+          status: 200,
+          message: "Like post successfully",
+          likesCount: updateLikePost.likesCount,
+          liked: true
+        })
+      }
+    }
+
+  } catch (error) {
+    console.error("Like post error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+const getPostById = async (req, res) => {
+  try {
+    const { postId, userId } = req.params
+    const post = await Post.findById(postId)
+      .populate("category", "name")
+      .populate("user_id", "username avatar");
+
+    if (!post) return res.status(404).json({ message: "Post not found" });
+
+    res.status(200).json({
+      status: "success",
+      data: transformPost(post, userId)
+    });
+  } catch (error) {
+    console.error("Get post by ID error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
 module.exports = {
   createPost,
   getPublicPosts,
   getProfilePosts,
   updatePost,
-  deletePost
+  deletePost,
+  updateLikePost,
+  getPostById,
 };
