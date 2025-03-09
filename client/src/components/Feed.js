@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import {
     Row,
     Col,
@@ -14,7 +13,6 @@ import img2 from '../assets/images/users/user2.jpg';
 const Feed = () => {
     const [posts, setPosts] = useState([]);
     const userId = localStorage.getItem('userId');
-    const nav = useNavigate();
 
     const fetchPublicPosts = async () => {
         try {
