@@ -66,7 +66,7 @@ const Feed = () => {
                                             {post.username}
                                         </a>
                                         <span className="ms-2 text-muted">{post.createdAt}</span>
-                                        <p className="mt-2 ms-3" onClick={nav(`/post/${post.id}`)}>
+                                        <p className="mt-2 ms-3">
                                             {post.content}
                                         </p>
                                         {post.medias.length > 0 && (
