@@ -84,12 +84,12 @@ const Feed = () => {
                                         )}
                                         <div className="desc ms-3">
                                             <button
-                                                className="text-decoration-none text-dark me-2 bg-transparent border-0"
+                                                type="button" // Add explicit type
+                                                className="text-decoration-none text-dark me-2 bg-transparent border-0 p-0"
                                                 onClick={() => handleLike(post.id)}
-                                                aria-label={post?.liked ? "Unlike post" : "Like post"}
                                             >
                                                 <i className={`bi ${post?.liked ? "bi-heart-fill" : "bi-heart"} me-2 text-danger`}></i>
-                                                {post?.likesCount !== 0 ? post?.likesCount : ""} Love
+                                                {post?.likesCount || ''} Love
                                             </button>
                                             <a href={`/post/${post.id}`} className="text-decoration-none text-dark me-2" >
                                                 <i className="bi bi-chat-square-dots me-2 text-danger"></i>
