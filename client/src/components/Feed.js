@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
     Row,
     Col,
@@ -12,13 +13,29 @@ import img2 from '../assets/images/users/user2.jpg';
 
 const Feed = () => {
     const [posts, setPosts] = useState([]);
+    const userId = localStorage.getItem('userId');
+    const nav = useNavigate();
 
     const fetchPublicPosts = async () => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_BACKEND_SERVER_URL}/posts/public`);
+            const response = await axios.get(`${process.env.REACT_APP_BACKEND_SERVER_URL}/posts/public/${userId}`);
             setPosts(response.data.data);
         } catch (err) {
             console.error("Error fetching posts:", err);
+        }
+    };
+
+    const handleLike = async (postId) => {
+        try {
+
+            // Send API request to update like status
+            await axios.post(`${process.env.REACT_APP_BACKEND_SERVER_URL}/posts/like/${postId}`, {
+                userId
+            });
+
+            fetchPublicPosts();
+        } catch (err) {
+            console.error("Error updating like:", err);
         }
     };
 
@@ -27,7 +44,7 @@ const Feed = () => {
     }, []);
 
 
-
+    
     return (
         <Card style={{
             maxHeight: "80vh", // Fixed pixel height
@@ -48,8 +65,8 @@ const Feed = () => {
                                         <a href={`/profile/${post.userId}`} className="text-dark fs-4 text-decoration-none fw-bold">
                                             {post.username}
                                         </a>
-                                        <span className="ms-2 text-muted">5 minutes ago</span>
-                                        <p className="mt-2 ms-3">
+                                        <span className="ms-2 text-muted">{post.createdAt}</span>
+                                        <p className="mt-2 ms-3" onClick={() => nav(`/post/${post.id}`)}>
                                             {post.content}
                                         </p>
                                         {post.medias.length > 0 && (
@@ -66,9 +83,13 @@ const Feed = () => {
                                             </Row>
                                         )}
                                         <div className="desc ms-3">
-                                            <a href="/" className="text-decoration-none text-dark me-2">
-                                                <i className="bi bi-heart-fill me-2 text-danger"></i>
-                                                5 Love
+                                            <a className="text-decoration-none text-dark me-2" onClick={() => handleLike(post.id)}>
+                                                <i className={`bi ${post?.liked ? "bi-heart-fill" : "bi-heart"} me-2 text-danger`}></i>
+                                                {post?.likesCount != 0 ? post?.likesCount : ""} Love
+                                            </a>
+                                            <a href={`/post/${post.id}`} className="text-decoration-none text-dark me-2" >
+                                                <i className={`bi bi-chat-square-dots me-2 text-danger`}></i>
+                                                Comment
                                             </a>
                                         </div>
                                     </div>

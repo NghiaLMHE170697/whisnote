@@ -1,0 +1,35 @@
+.profile-content {
+  font-size: 20px;
+}
+
+.category-badge {
+  font-size: 17px;
+}
+
+.profile-user-note {
+  margin-left: 3%;
+  padding-bottom: 30px !important;
+  margin-bottom: 5px !important;
+}
+
+.profile-note-more-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.profile-love-info-wrapper {
+  display: flex;
+  align-items: center;
+  cursor: 'pointer';
+  display: 'flex';
+  align-items: center;
+}
+
+.profile-love-icon {
+  font-size: 25px;
+}
+
+.profile-love-info-content {
+  font-size: 16px;
+}

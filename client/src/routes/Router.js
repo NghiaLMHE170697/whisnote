@@ -77,6 +77,7 @@ const Home = Loadable(lazy(() => import('../views/Home')));
 //const StarterKit = Loadable(lazy(() => import('../views/sample-pages/StarterKit')));
 const Profile = Loadable(lazy(() => import('../views/sample-pages/Profile')));
 const CreatePost = Loadable(lazy(() => import('../views/CreatePost')));
+const ViewPostDetail = Loadable(lazy(() => import('../views/PostDetail')));
 // const Gallery = Loadable(lazy(() => import('../views/sample-pages/Gallery')));
 // const SearchResult = Loadable(lazy(() => import('../views/sample-pages/SearchResult')));
 // const HelperClass = Loadable(lazy(() => import('../views/sample-pages/HelperClass')));
@@ -112,6 +113,7 @@ const ThemeRoutes = [
       { path: '/', name: 'Home', element: <ProtectedRoutes element={Home} /> },
       { path: '/profile/:userId', name: 'Profile', exact: true, element: <ProtectedRoutes element={Profile} /> },
       { path: '/post/create', name: 'Create Post', exact: true, element: <ProtectedRoutes element={CreatePost} /> },
+      { path: '/post/:postId', name: 'Post Detail', exact: true, element: <ProtectedRoutes element={ViewPostDetail} /> },
       { path: '*', element: <Navigate to="/auth/404" /> },
     ],
   },

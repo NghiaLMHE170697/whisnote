@@ -41,9 +41,22 @@ const Profile = () => {
     }
   };
 
+  const handleLike = async (postId) => {
+    try {
+
+      // Send API request to update like status
+      await axios.post(`${process.env.REACT_APP_BACKEND_SERVER_URL}/posts/like/${postId}`, {
+        userId: currentUserId
+      });
+      fetchProfilePost();
+    } catch (err) {
+      console.error("Error updating like:", err);
+    }
+  };
+
   useEffect(() => {
     fetchProfilePost();
-  }, [userId]);
+  }, []);
 
   const toggle = (tab) => {
     if (activeTab !== tab) {
@@ -160,7 +173,7 @@ const Profile = () => {
                                 <a className="text-dark fs-4 text-decoration-none fw-bold">
                                   {post.username}
                                 </a>
-                                <span className="ms-2 text-muted">5 minutes ago</span>
+                                <span className="ms-2 text-muted">{post.createdAt}</span>
                                 <p className="mt-2 ms-3">
                                   {post.content}
                                 </p>
@@ -178,9 +191,13 @@ const Profile = () => {
                                   </Row>
                                 )}
                                 <div className="desc ms-3">
-                                  <a href="/" className="text-decoration-none text-dark me-2">
-                                    <i className="bi bi-heart-fill me-2 text-danger"></i>
-                                    5 Love
+                                  <a className="text-decoration-none text-dark me-2" onClick={() => handleLike(post.id)}>
+                                    <i className={`bi ${post?.liked ? "bi-heart-fill" : "bi-heart"} me-2 text-danger`}></i>
+                                    {post?.likesCount != 0 ? post?.likesCount : ""} Love
+                                  </a>
+                                  <a href={`/post/${post.id}`} className="text-decoration-none text-dark me-2" >
+                                    <i className={`bi bi-chat-square-dots me-2 text-danger`}></i>
+                                    Comment
                                   </a>
                                 </div>
                               </div>
