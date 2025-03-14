@@ -13,9 +13,12 @@ const db = require("./models");
 const app = express();
 
 // Import Routes
-const userRouter = require("./routes/userRoutes");
-const postRouter = require("./routes/postRouter");
-const categoryRouter = require("./routes/categoryRouter");
+const {
+    userRouter,
+    postRouter,
+    categoryRouter,
+    commentRouter
+} = require("./routes");
 
 // Middleware
 app.use(express.json());
@@ -68,6 +71,7 @@ app.get("/", (req, res) => {
 app.use("/users", userRouter);
 app.use("/posts", postRouter);
 app.use("/categories", categoryRouter);
+app.use("/comments", commentRouter);
 
 // ❌ Xử lý lỗi 404 (Route không tồn tại)
 app.use((req, res, next) => {

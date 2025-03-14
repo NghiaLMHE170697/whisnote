@@ -15,14 +15,15 @@ import {
 } from 'reactstrap';
 import { motion } from 'framer-motion';
 import img1 from '../assets/images/users/user1.jpg';
-import img3 from '../assets/images/users/user3.jpg';
-import img4 from '../assets/images/users/user4.jpg';
+
 import './PostDetail.css';
 
 function PostDetail() {
   const [post, setPost] = useState({});
+  const [comments, setComments] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [animating, setAnimating] = useState(false);
+  const [input, setInput] = useState("");
   const { postId } = useParams();
   const userId = localStorage.getItem('userId');
 
@@ -34,6 +35,15 @@ function PostDetail() {
       console.error("Error fetching posts:", err);
     }
   };
+
+  const fetchPostComment = async () => {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_SERVER_URL}/comments/${postId}`);
+      setComments(response.data);
+    } catch (err) {
+      console.error("Error fetching comments: ", err);
+    }
+  }
 
   const handleLike = async () => {
     try {
@@ -57,8 +67,24 @@ function PostDetail() {
     }
   };
 
+  const handleSendComment = async () => {
+    try {
+      if (!input.trim()) return;
+      await axios.post(`${process.env.REACT_APP_BACKEND_SERVER_URL}/comments/add/${postId}`, {
+        content: input,
+        author: userId
+      }).then(res => {
+        setInput("");
+        fetchPostComment();
+      })
+    } catch (err) {
+
+    }
+  }
+
   useEffect(() => {
     fetchPostDetail();
+    fetchPostComment();
   }, []);
 
 
@@ -179,52 +205,36 @@ function PostDetail() {
             <CardBody>
               <h5 className="mb-4">Replies</h5>
               <Input
-                id="title1"
-                name="title1"
                 type="textarea"
                 rows="5"
                 // value={noteDetails?.title}
                 style={{ marginBottom: '40px' }}
                 placeholder="Write a reply..."
-                onChange={() => { }}
+                value={input}
+                onChange={(e) => {
+                  setInput(e.target.value);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSendComment();
+                  }
+                }}
               />
-              <Media className="d-flex">
-                <Media left href="#">
-                  <Media object src={img1} alt="Generic placeholder image" width="100" />
+              {comments.map(c => (
+                <Media className="d-flex py-3">
+                  <Media left href="#">
+                    <Media object src={c.author.avatar} alt="Generic placeholder image" width="100" />
+                  </Media>
+                  <Media body className="ms-3">
+                    <Media heading className="d-flex align-items-center">
+                      <span className="fw-bold me-2">{c.author.username}</span>
+                      <small className="text-muted">{c.createdAt}</small>
+                    </Media>
+                    {c.content}
+                  </Media>
                 </Media>
-                <Media body className="ms-3">
-                  <Media heading>Ticket title</Media>
-                  Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante
-                  sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra
-                  turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue
-                  felis in faucibus.
-                </Media>
-              </Media>
-
-              <Media className="d-flex mt-5">
-                <Media left href="#">
-                  <Media object src={img3} alt="Generic placeholder image" width="100" />
-                </Media>
-                <Media body className="ms-3">
-                  <Media heading>Ticket title</Media>
-                  Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante
-                  sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra
-                  turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue
-                  felis in faucibus.
-                </Media>
-              </Media>
-              <Media className="d-flex mt-5">
-                <Media left href="#">
-                  <Media object src={img4} alt="Generic placeholder image" width="100" />
-                </Media>
-                <Media body className="ms-3">
-                  <Media heading>Ticket title</Media>
-                  Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante
-                  sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra
-                  turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue
-                  felis in faucibus.
-                </Media>
-              </Media>
+              ))}
             </CardBody>
           </Card>
         </Col>

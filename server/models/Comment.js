@@ -16,29 +16,7 @@ const commentSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "Post",
             required: [true, "Post is required"],
-        },
-        likers: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "User",
-            },
-        ],
-        replys: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "Comment",
-            },
-        ],
-        isReply: {
-            type: Boolean,
-            default: false, 
-        },
-        likesCount: {
-            type: Number,
-            default: 0,
-            min: [0, "Likes count must be at least 0"]
         }
-
     },
     { timestamps: true }
 );
