@@ -77,7 +77,7 @@ function PostDetail() {
         fetchPostComment();
       })
     } catch (err) {
-
+      console.log("Error sending comment", err);
     }
   }
 
