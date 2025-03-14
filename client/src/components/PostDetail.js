@@ -14,7 +14,6 @@ import {
   Input,
 } from 'reactstrap';
 import { motion } from 'framer-motion';
-import img1 from '../assets/images/users/user1.jpg';
 
 import './PostDetail.css';
 
@@ -73,7 +72,7 @@ function PostDetail() {
       await axios.post(`${process.env.REACT_APP_BACKEND_SERVER_URL}/comments/add/${postId}`, {
         content: input,
         author: userId
-      }).then(res => {
+      }).then(() => {
         setInput("");
         fetchPostComment();
       })
