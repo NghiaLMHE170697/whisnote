@@ -37,14 +37,23 @@ function PostDetail() {
 
   const handleLike = async () => {
     try {
-
+      //Update post UI
+      setPost(prev => ({
+        ...prev,
+        liked: !prev.liked,
+        likesCount: prev.liked ? prev.likesCount - 1 : prev.likesCount + 1
+      }))
       // Send API request to update like status
       await axios.post(`${process.env.REACT_APP_BACKEND_SERVER_URL}/posts/like/${postId}`, {
         userId
       });
-      fetchPostDetail();
     } catch (err) {
       console.error("Error updating like:", err);
+      setPost(prev => ({
+        ...prev,
+        liked: !prev.liked,
+        likesCount: prev.liked ? prev.likesCount + 1 : prev.likesCount - 1
+      }));
     }
   };
 

@@ -43,7 +43,17 @@ const Profile = () => {
 
   const handleLike = async (postId) => {
     try {
-
+      setPosts(prevPosts => prevPosts.map(post => {
+        if (post.id === postId) {
+          const newLiked = !post.liked;
+          return {
+            ...post,
+            liked: newLiked,
+            likesCount: newLiked ? post.likesCount + 1 : post.likesCount - 1,
+          };
+        }
+        return post;
+      }))
       // Send API request to update like status
       await axios.post(`${process.env.REACT_APP_BACKEND_SERVER_URL}/posts/like/${postId}`, {
         userId: currentUserId
@@ -51,6 +61,16 @@ const Profile = () => {
       fetchProfilePost();
     } catch (err) {
       console.error("Error updating like:", err);
+      setPosts(prevPosts => prevPosts.map(post => {
+        if (post.id === postId) {
+          return {
+            ...post,
+            liked: !post.liked,
+            likesCount: post.liked ? post.likesCount - 1 : post.likesCount + 1
+          };
+        }
+        return post;
+      }));
     }
   };
 
