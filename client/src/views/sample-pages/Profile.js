@@ -209,10 +209,10 @@ const Profile = () => {
                                 <div className="desc ms-3">
                                   <a className="text-decoration-none text-dark me-2" onClick={() => handleLike(post.id)}>
                                     <i className={`bi ${post?.liked ? "bi-heart-fill" : "bi-heart"} me-2 text-danger`}></i>
-                                    {post?.likesCount != 0 ? post?.likesCount : ""} Love
+                                    {post?.likesCount !== 0 ? post?.likesCount : ""} Love
                                   </a>
                                   <a href={`/post/${post.id}`} className="text-decoration-none text-dark me-2" >
-                                    <i className={`bi bi-chat-square-dots me-2 text-danger`}></i>
+                                    <i className="bi bi-chat-square-dots me-2 text-danger"></i>
                                     Comment
                                   </a>
                                 </div>
