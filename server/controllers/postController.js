@@ -45,6 +45,22 @@ const createPost = async (req, res) => {
       message: "Bạn đã đạt số lượng bài đăng tối đa (2 bài) cho người dùng miễn phí. Vui lòng thử lại vào ngày mai"
     });
 
+    // Add these checks before processing the post
+    const MAX_WORDS = 100;
+    const MAX_CHARS = 600; // Adjust based on your needs
+
+    // Trim and count
+    const trimmedContent = content.trim();
+    const wordCount = trimmedContent.split(/\s+/).length;
+    const charCount = trimmedContent.length;
+
+    // Combined validation
+    if (wordCount > MAX_WORDS || charCount > MAX_CHARS) {
+      return res.status(400).json({
+        message: `Bài đăng vượt quá giới hạn: tối đa ${MAX_WORDS} từ hoặc ${MAX_CHARS} ký tự`
+      });
+    }
+
     // Category validation
     const categoryExists = await Category.exists({ name: category });
     if (!categoryExists) return res.status(400).json({
