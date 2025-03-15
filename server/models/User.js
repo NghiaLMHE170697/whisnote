@@ -11,7 +11,7 @@ const UserSchema = new mongoose.Schema(
       trim: true
     },
     email: { type: String, unique: true, required: true }, // Không bắt buộc
-    avatar: { type: String, default: "../../../assets/images/users/user4.jpg" },
+    avatar: { type: String, default: "https://s3.cloudfly.vn/bucketfile/user4.jpg" },
     role: { type: String, enum: ["free", "premium", "admin"], default: "free" },
     premium_expiry: { type: Date, default: null },
     post_count: { type: Number, default: 0 },

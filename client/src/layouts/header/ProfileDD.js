@@ -1,6 +1,6 @@
 import React from 'react';
 import { DropdownItem } from 'reactstrap';
-import { User, FileText, Star, Settings, Droplet } from 'react-feather';
+import { User, Star } from 'react-feather';
 import { useNavigate } from 'react-router-dom';
 import user1 from '../../assets/images/users/user1.jpg';
 
@@ -24,14 +24,10 @@ const ProfileDD = () => {
         &nbsp; My Profile
       </DropdownItem>
       <DropdownItem className="px-4 py-3">
-        <FileText size={20} className="text-muted" />
-        &nbsp; Edit Profile
-      </DropdownItem>
-      <DropdownItem className="px-4 py-3">
         <Star size={20} className="text-muted" />
         &nbsp; My Balance
       </DropdownItem>
-      <DropdownItem className="px-4 py-3">
+      {/* <DropdownItem className="px-4 py-3">
         <Droplet size={20} className="text-muted" />
         &nbsp; Customize
       </DropdownItem>
@@ -40,7 +36,7 @@ const ProfileDD = () => {
         <Settings size={20} className="text-muted" />
         &nbsp; Settings
       </DropdownItem>
-      <DropdownItem divider />
+      <DropdownItem divider /> */}
     </div>
   );
 };

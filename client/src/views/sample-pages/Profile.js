@@ -16,7 +16,7 @@ import {
   Nav,
   NavItem,
   NavLink,
-  Progress,
+  // Progress,
   Form,
   FormGroup,
   Label,
@@ -29,6 +29,7 @@ import img1 from '../../assets/images/users/user1.jpg';
 const Profile = () => {
   const [activeTab, setActiveTab] = useState('1');
   const [posts, setPosts] = useState([]);
+  const [profile, setProfile] = useState({});
   const { userId } = useParams();
   const currentUserId = localStorage.getItem('userId');
 
@@ -40,6 +41,15 @@ const Profile = () => {
       console.error("Error fetching posts:", err);
     }
   };
+
+  const fetchUserProfile = async () => {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_SERVER_URL}/users/${userId}`);
+      setProfile(response.data.data);
+    } catch (err) {
+      console.log("Error fetching user detail: ", err);
+    }
+  }
 
   const handleLike = async (postId) => {
     try {
@@ -58,7 +68,6 @@ const Profile = () => {
       await axios.post(`${process.env.REACT_APP_BACKEND_SERVER_URL}/posts/like/${postId}`, {
         userId: currentUserId
       });
-      fetchProfilePost();
     } catch (err) {
       console.error("Error updating like:", err);
       setPosts(prevPosts => prevPosts.map(post => {
@@ -76,6 +85,7 @@ const Profile = () => {
 
   useEffect(() => {
     fetchProfilePost();
+    fetchUserProfile();
   }, []);
 
   const toggle = (tab) => {
@@ -92,35 +102,21 @@ const Profile = () => {
           <Card>
             <CardBody className="p-4">
               <div className="text-center mt-4">
-                <img src={img1} className="rounded-circle" width="150" alt="" />
+                <img src={profile.avatar} className="rounded-circle" width="150" alt="" />
                 <CardTitle tag="h4" className="mt-2 mb-0">
-                  Hanna Gover
+                  {profile.username}
                 </CardTitle>
-                <CardSubtitle className="text-muted">Accounts Manager</CardSubtitle>
-                <Row className="text-center justify-content-md-center mt-3">
-                  <Col xs="4">
-                    <a href="/" className="text-dark fw-bold text-decoration-none">
-                      <i className="bi bi-person text-muted"></i>
-                      <span className="font-medium ms-2">254</span>
-                    </a>
-                  </Col>
-                  <Col xs="4">
-                    <a href="/" className="text-dark fw-bold text-decoration-none">
-                      <i className="bi bi-columns text-muted"></i>
-                      <span className="font-medium ms-2">54</span>
-                    </a>
-                  </Col>
-                </Row>
+                <CardSubtitle className="text-muted">{profile.role === "free" ? "Free Member" : "Premium Member"}</CardSubtitle>
               </div>
             </CardBody>
             <CardBody className="border-top p-4">
               <div>
                 <CardSubtitle className="text-muted fs-5">Email address</CardSubtitle>
-                <CardTitle tag="h4">hannagover@gmail.com</CardTitle>
-
+                <CardTitle tag="h4">{profile.email}</CardTitle>
                 <CardSubtitle className="text-muted fs-5 mt-3">Phone</CardSubtitle>
-                <CardTitle tag="h4">+91 654 784 547</CardTitle>
-
+                <CardTitle tag="h4">
+                  {profile.phone ? profile.phone : <span className='text-muted fs-5 mt-3'>Không khả dụng</span>}
+                </CardTitle>
                 <CardSubtitle className="text-muted fs-5 mt-3">Address</CardSubtitle>
                 <CardTitle tag="h4">71 Pilgrim Avenue Chevy Chase, MD 20815</CardTitle>
                 <div>
@@ -151,7 +147,7 @@ const Profile = () => {
                   Timeline
                 </NavLink>
               </NavItem>
-              <NavItem>
+              {/* <NavItem>
                 <NavLink
                   className={activeTab === '2' ? 'active bg-transparent' : 'cursor-pointer'}
                   onClick={() => {
@@ -160,7 +156,7 @@ const Profile = () => {
                 >
                   Profile
                 </NavLink>
-              </NavItem>
+              </NavItem> */}
               <NavItem>
                 <NavLink
                   className={activeTab === '3' ? 'active bg-transparent' : 'cursor-pointer'}
@@ -213,10 +209,10 @@ const Profile = () => {
                                 <div className="desc ms-3">
                                   <a className="text-decoration-none text-dark me-2" onClick={() => handleLike(post.id)}>
                                     <i className={`bi ${post?.liked ? "bi-heart-fill" : "bi-heart"} me-2 text-danger`}></i>
-                                    {post?.likesCount !== 0 ? post?.likesCount : ""} Love
+                                    {post?.likesCount != 0 ? post?.likesCount : ""} Love
                                   </a>
                                   <a href={`/post/${post.id}`} className="text-decoration-none text-dark me-2" >
-                                    <i className="bi bi-chat-square-dots me-2 text-danger"></i>
+                                    <i className={`bi bi-chat-square-dots me-2 text-danger`}></i>
                                     Comment
                                   </a>
                                 </div>
@@ -229,7 +225,7 @@ const Profile = () => {
                   </Col>
                 </Row>
               </TabPane>
-              <TabPane tabId="2">
+              {/* <TabPane tabId="2">
                 <Row>
                   <Col sm="12">
                     <div className="p-4">
@@ -294,29 +290,29 @@ const Profile = () => {
                     </div>
                   </Col>
                 </Row>
-              </TabPane>
+              </TabPane> */}
               <TabPane tabId="3">
                 <Row>
                   <Col sm="12">
                     <div className="p-4">
                       <Form>
                         <FormGroup>
-                          <Label>Full Name</Label>
+                          <Label>Username</Label>
                           <Input type="text" placeholder="Shaina Agrawal" />
                         </FormGroup>
                         <FormGroup>
                           <Label>Email</Label>
                           <Input type="email" placeholder="Jognsmith@cool.com" />
                         </FormGroup>
-                        <FormGroup>
+                        {/* <FormGroup>
                           <Label>Password</Label>
                           <Input type="password" placeholder="Password" />
-                        </FormGroup>
+                        </FormGroup> */}
                         <FormGroup>
                           <Label>Phone No</Label>
                           <Input type="text" placeholder="123 456 1020" />
                         </FormGroup>
-                        <FormGroup>
+                        {/* <FormGroup>
                           <Label>Message</Label>
                           <Input type="textarea" />
                         </FormGroup>
@@ -327,7 +323,7 @@ const Profile = () => {
                             <option>India</option>
                             <option>America</option>
                           </Input>
-                        </FormGroup>
+                        </FormGroup> */}
                         <Button color="primary">Update Profile</Button>
                       </Form>
                     </div>

@@ -1,9 +1,8 @@
 import * as Icon from 'react-feather';
 
 const SidebarData = [
-  { caption: 'Personal' },
   {
-    title: 'Home',
+    title: 'Trang Chủ',
     href: '/',
     id: 1,
     icon: <Icon.Home />,
@@ -23,13 +22,13 @@ const SidebarData = [
     icon: <Icon.Edit />,
     collapisble: false,
   },
-  {
-    title: 'Search',
-    href: '/search',
-    id: 1.3,
-    icon: <Icon.Search />,
-    collapisble: false,
-  },
+  // {
+  //   title: 'Search',
+  //   href: '/search',
+  //   id: 1.3,
+  //   icon: <Icon.Search />,
+  //   collapisble: false,
+  // },
 ];
 
 export default SidebarData;

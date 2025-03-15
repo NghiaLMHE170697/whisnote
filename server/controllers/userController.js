@@ -117,15 +117,8 @@ exports.login = async (req, res) => {
 // 👤 Xem thông tin cá nhân
 exports.getProfile = async (req, res) => {
   try {
+    const { userId } = req.params;
     console.log("🔍 Request params:", req.params);
-    console.log("🔑 User từ token:", req.userId);
-
-    if (!req.userId) {
-      return res.status(401).json({ error: "Unauthorized: Không có thông tin user từ token." });
-    }
-
-    // Nếu `/users/me`, lấy userId từ token
-    const userId = req.params.id === "me" ? req.userId : req.params.id;
 
     if (!userId) {
       return res.status(400).json({ error: "Không tìm thấy userId hợp lệ." });

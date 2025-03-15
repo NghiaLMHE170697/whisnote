@@ -16,8 +16,8 @@ import {
 import { MessageSquare } from 'react-feather';
 import * as Icon from 'react-feather';
 import MessageDD from './MessageDD';
-import MegaDD from './MegaDD';
-import NotificationDD from './NotificationDD';
+//import MegaDD from './MegaDD';
+// import NotificationDD from './NotificationDD';
 import user1 from '../../assets/images/users/user4.jpg';
 import { ToggleMiniSidebar, ToggleMobileSidebar } from '../../store/customizer/CustomizerSlice';
 import ProfileDD from './ProfileDD';
@@ -87,7 +87,7 @@ const Header = () => {
         {/******************************/}
         {/**********Notification DD**********/}
         {/******************************/}
-        <UncontrolledDropdown>
+        {/* <UncontrolledDropdown>
           <DropdownToggle color={topbarColor}>
             <Icon.Bell size={22} />
           </DropdownToggle>
@@ -106,7 +106,7 @@ const Header = () => {
               </Button>
             </div>
           </DropdownMenu>
-        </UncontrolledDropdown>
+        </UncontrolledDropdown> */}
         {/******************************/}
         {/**********Message DD**********/}
         {/******************************/}
@@ -133,14 +133,14 @@ const Header = () => {
         {/******************************/}
         {/**********Mega DD**********/}
         {/******************************/}
-        <UncontrolledDropdown className="mega-dropdown mx-1">
+        {/* <UncontrolledDropdown className="mega-dropdown mx-1">
           <DropdownToggle className="bg-transparent border-0" color={topbarColor}>
             <Icon.Grid size={22} />
           </DropdownToggle>
           <DropdownMenu>
             <MegaDD />
           </DropdownMenu>
-        </UncontrolledDropdown>
+        </UncontrolledDropdown> */}
         {/******************************/}
         {/**********Profile DD**********/}
         {/******************************/}

@@ -28,14 +28,21 @@ const createPost = async (req, res) => {
 
 
     // Daily post limit check
-    const startOfToday = new Date().setHours(0, 0, 0, 0);
+    const now = new Date();
+    const startOfDay = new Date(
+      Date.UTC(
+        now.getUTCFullYear(),
+        now.getUTCMonth(),
+        now.getUTCDate()
+      )
+    );
     const postCount = await Post.countDocuments({
       user_id,
-      createdAt: { $gte: startOfToday }
+      createdAt: { $gte: startOfDay }
     });
 
-    if (postCount >= 10) return res.status(403).json({
-      message: "Daily post limit reached (10 posts)"
+    if (postCount >= 2) return res.status(429).json({
+      message: "Bạn đã đạt số lượng bài đăng tối đa (2 bài) cho người dùng miễn phí. Vui lòng thử lại vào ngày mai"
     });
 
     // Category validation

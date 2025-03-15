@@ -113,7 +113,7 @@ function PostForm() {
       });
 
       if (response.data.status === 'success') {
-        Swal.fire('Success', "Post created successfully!", 'success');
+        Swal.fire('Success', "Đăng bài thành công!", 'success');
         // Reset form
         setFormData({
           content: '',
@@ -128,7 +128,7 @@ function PostForm() {
 
     } catch (error) {
       console.error('Error creating post:', error);
-      Swal.fire('Failed to create post', error.response?.data?.message || error.message, 'error');
+      Swal.fire('Đăng bài thất bại', error.response?.data?.message || error.message, 'error');
     }
   };
 
