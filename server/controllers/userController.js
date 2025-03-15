@@ -1,7 +1,7 @@
 const User = require("../models/User.js");
 const JwtProvider = require("../provider/JwtProvider");
 const bcrypt = require('bcrypt');
-
+const mongoose = require("mongoose");
 
 // 📌 Đăng ký với số điện thoại & Gửi OTP
 exports.register = async (req, res) => {
@@ -105,7 +105,8 @@ exports.login = async (req, res) => {
       token,
       userId: user._id,
       username: user.username,
-      avatar: user.avatar
+      avatar: user.avatar,
+      role: user.role
     });
   } catch (error) {
     console.error("Login error:", error);
@@ -137,39 +138,89 @@ exports.getProfile = async (req, res) => {
   }
 };
 
-
-
-
-// ➕ Theo dõi người dùng
-exports.followUser = async (req, res) => {
+exports.upgradePlan = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
-    const targetUser = await User.findById(req.params.id);
-    if (!user || !targetUser) return res.status(404).json({ error: "Người dùng không tồn tại" });
+    const { userId, plan } = req.body;
 
-    await user.follow(targetUser._id);
-    await targetUser.followers.push(user._id);
-    await targetUser.save();
+    // Validate input
+    if (!userId || !plan) {
+      return res.status(400).json({ error: 'Thiếu thông tin bắt buộc' });
+    }
 
-    res.json({ message: `Bạn đã theo dõi ${targetUser.username}` });
+    // Validate MongoDB ID format
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({
+        error: 'Định dạng ID người dùng không hợp lệ'
+      });
+    }
+
+    // Extract duration from Vietnamese plan title
+    const durationMatch = plan.match(/Gói (\d+) (Tháng|Năm)/i);
+
+    if (!durationMatch) {
+      return res.status(400).json({ error: 'Định dạng gói không hợp lệ' });
+    }
+
+    const amount = parseInt(durationMatch[1], 10);
+    const unit = durationMatch[2].toLowerCase();
+
+    // Calculate premium expiry date (original logic)
+    const currentDate = new Date();
+    let expiryDate = new Date(currentDate);
+
+    if (unit === 'tháng') {
+      // Month-based plans
+      switch (amount) {
+        case 1:
+          expiryDate.setMonth(expiryDate.getMonth() + 1);
+          break;
+        case 6:
+          expiryDate.setMonth(expiryDate.getMonth() + 6);
+          break;
+        default:
+          expiryDate.setMonth(expiryDate.getMonth() + amount);
+      }
+    } else if (unit === 'năm') {
+      // Year-based plans
+      switch (amount) {
+        case 1:
+          expiryDate.setFullYear(expiryDate.getFullYear() + 1);
+          break;
+        default:
+          expiryDate.setFullYear(expiryDate.getFullYear() + amount);
+      }
+    }
+
+    // Update user in database
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        $set: {
+          role: 'premium',
+          premium_expiry: expiryDate
+        }
+      },
+      { new: true } // Return the updated document
+    );
+    if (!updatedUser) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.json({
+      success: true,
+      message: 'Plan upgraded successfully',
+      premium_expiry: expiryDate.toISOString(),
+      user: {
+        id: updatedUser._id,
+        role: updatedUser.role
+      }
+    });
+
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Upgrade error:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
-};
+}
 
-// ➖ Bỏ theo dõi người dùng
-exports.unfollowUser = async (req, res) => {
-  try {
-    const user = await User.findById(req.user.id);
-    const targetUser = await User.findById(req.params.id);
-    if (!user || !targetUser) return res.status(404).json({ error: "Người dùng không tồn tại" });
 
-    await user.unfollow(targetUser._id);
-    await targetUser.followers.pull(user._id);
-    await targetUser.save();
 
-    res.json({ message: `Bạn đã bỏ theo dõi ${targetUser.username}` });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};

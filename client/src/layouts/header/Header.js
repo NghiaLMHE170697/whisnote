@@ -12,8 +12,9 @@ import {
   DropdownItem,
   Button,
   Input,
+  Badge
 } from 'reactstrap';
-import { MessageSquare } from 'react-feather';
+import { MessageSquare, ArrowUpRight, CheckCircle } from 'react-feather';
 import * as Icon from 'react-feather';
 import MessageDD from './MessageDD';
 //import MegaDD from './MegaDD';
@@ -28,10 +29,31 @@ const Header = () => {
   const topbarColor = useSelector((state) => state.customizer.topbarBg);
   const dispatch = useDispatch();
   const avatar = localStorage.getItem('avatar') ? localStorage.getItem('avatar') : user1;
+  const [role, setUserRole] = useState(localStorage.getItem('role') || 'free');
+  const nav = useNavigate();
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setUserRole(localStorage.getItem('role') || 'free');
+    };
+
+    // Listen for storage events
+    window.addEventListener('storage', handleStorageChange);
+
+    // Also check on mount
+    handleStorageChange();
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
 
   const handleLogOut = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
+    localStorage.removeItem('username');
+    localStorage.removeItem('avatar');
+    localStorage.removeItem('role');
     window.location.href = '/auth/login';
   }
 
@@ -84,6 +106,21 @@ const Header = () => {
       </Nav>
 
       <div className="d-flex align-items-center">
+        {role === 'free' ? (
+          <Button
+            color={topbarColor}
+            className="me-2 d-flex align-items-center"
+            onClick={() => nav('/pricing')} // Replace with your pricing page route
+          >
+            <span className="me-1">Đăng ký gói trả phí</span>
+            <ArrowUpRight size={16} />
+          </Button>
+        ) : (
+          <Badge color="success" className="me-2 d-flex align-items-center">
+            <CheckCircle size={16} className="me-1" />
+            Premium
+          </Badge>
+        )}
         {/******************************/}
         {/**********Notification DD**********/}
         {/******************************/}

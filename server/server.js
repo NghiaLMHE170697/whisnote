@@ -6,12 +6,17 @@ const helmet = require("helmet");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const rateLimit = require("express-rate-limit");
+const PayOS = require("@payos/node");
 require("dotenv").config();
 const db = require("./models");
 
 // Khởi tạo Express
 const app = express();
-
+const payOS = new PayOS(
+    process.env.YOUR_CLIENT_ID,
+    process.env.YOUR_API_KEY,
+    process.env.YOUR_CHECKSUM_KEY
+);
 // Import Routes
 const {
     userRouter,
@@ -20,11 +25,6 @@ const {
     commentRouter
 } = require("./routes");
 
-// Middleware
-app.use(express.json());
-app.use(bodyParser.json({ limit: "30mb", extended: true }));
-app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
-app.use(cookieParser());
 
 // ⚡ Bảo mật tốt hơn với Helmet
 app.use(
@@ -44,11 +44,27 @@ app.use(
 // 🌍 CORS - Hỗ trợ cả dev và production
 app.use(
     cors({
-        origin: process.env.CLIENT_URL || "https://whisnote-client.vercel.app",
-        methods: ["GET", "POST", "DELETE", "UPDATE", "PUT", "PATCH"],
-        credentials: true,
+        origin: function (origin, callback) {
+            const allowedOrigins = [
+                process.env.CLIENT_URL,
+                'https://whisnote-client.vercel.app'
+            ];
+            if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+                callback(null, true);
+            } else {
+                callback(new Error('Not allowed by CORS'));
+            }
+        },
+        methods: ["GET", "POST", "PUT", "DELETE"],
+        allowedHeaders: ["Content-Type", "Authorization"],
+        credentials: true
     })
 );
+
+app.use(express.json());
+app.use(bodyParser.json({ limit: "30mb", extended: true }));
+app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
+app.use(cookieParser());
 
 // ⚡ Rate Limit (Hạn chế DDoS Attack)
 // const limiter = rateLimit({
@@ -72,6 +88,42 @@ app.use("/users", userRouter);
 app.use("/posts", postRouter);
 app.use("/categories", categoryRouter);
 app.use("/comments", commentRouter);
+app.post("/create-payment-link", async (req, res) => {
+    try {
+        const { plan } = req.body;
+        const YOUR_DOMAIN = process.env.CLIENT_URL || 'https://whisnote-client.vercel.app';
+
+        const orderCode = Date.now(); // Better unique ID generation
+
+        const paymentData = {
+            orderCode: orderCode,
+            amount: Number(plan.price.replace(/,/g, '')),
+            description: `Thanh toán ${plan.title}`,
+            items: [{
+                name: plan.title,
+                quantity: 1,
+                price: Number(plan.price.replace(/,/g, ''))
+            }],
+            returnUrl: `${YOUR_DOMAIN}/pricing?success=true`,
+            cancelUrl: `${YOUR_DOMAIN}/pricing?canceled=true`,
+        };
+
+        const paymentLink = await payOS.createPaymentLink(paymentData);
+
+        // Return JSON instead of redirect
+        res.json({
+            success: true,
+            checkoutUrl: paymentLink.checkoutUrl
+        });
+
+    } catch (error) {
+        console.error("Payment Error:", error);
+        res.status(500).json({
+            success: false,
+            message: error.message || 'Lỗi hệ thống, vui lòng thử lại sau'
+        });
+    }
+});
 
 // ❌ Xử lý lỗi 404 (Route không tồn tại)
 app.use((req, res, next) => {

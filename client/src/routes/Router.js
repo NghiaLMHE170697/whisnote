@@ -78,6 +78,7 @@ const Home = Loadable(lazy(() => import('../views/Home')));
 const Profile = Loadable(lazy(() => import('../views/sample-pages/Profile')));
 const CreatePost = Loadable(lazy(() => import('../views/CreatePost')));
 const ViewPostDetail = Loadable(lazy(() => import('../views/PostDetail')));
+const Pricing = Loadable(lazy(() => import('../views/Pricing')));
 // const Gallery = Loadable(lazy(() => import('../views/sample-pages/Gallery')));
 // const SearchResult = Loadable(lazy(() => import('../views/sample-pages/SearchResult')));
 // const HelperClass = Loadable(lazy(() => import('../views/sample-pages/HelperClass')));
@@ -114,6 +115,7 @@ const ThemeRoutes = [
       { path: '/profile/:userId', name: 'Profile', exact: true, element: <ProtectedRoutes element={Profile} /> },
       { path: '/post/create', name: 'Create Post', exact: true, element: <ProtectedRoutes element={CreatePost} /> },
       { path: '/post/:postId', name: 'Post Detail', exact: true, element: <ProtectedRoutes element={ViewPostDetail} /> },
+      { path: '/pricing', name: 'Pricing', exact: true, element: <ProtectedRoutes element={Pricing} /> },
       { path: '*', element: <Navigate to="/auth/404" /> },
     ],
   },

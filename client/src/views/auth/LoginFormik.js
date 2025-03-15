@@ -37,6 +37,7 @@ const LoginFormik = () => {
         localStorage.setItem('userId', res.data.userId);
         localStorage.setItem('username', res.data.username);
         localStorage.setItem('avatar', res.data.avatar);
+        localStorage.setItem('role', res.data.role);
 
 
         Swal.fire('Login Success', res.message, 'success');
