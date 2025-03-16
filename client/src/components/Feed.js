@@ -17,10 +17,13 @@ const Feed = () => {
 
     const fetchPublicPosts = async () => {
         try {
+            setIsLoading(true);
             const response = await axios.get(`${process.env.REACT_APP_BACKEND_SERVER_URL}/posts/public/${userId}`);
             setPosts(response.data.data);
         } catch (err) {
             console.error("Error fetching posts:", err);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -61,9 +64,18 @@ const Feed = () => {
     };
 
     useEffect(() => {
-        setIsLoading(true);
-        fetchPublicPosts();
-        setIsLoading(false);
+        const loadData = async () => {
+            setIsLoading(true);
+            try {
+                await fetchPublicPosts();
+            } catch (error) {
+                console.error("Error loading posts:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        loadData();
     }, []);
 
 
