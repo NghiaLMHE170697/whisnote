@@ -64,18 +64,7 @@ const Feed = () => {
     };
 
     useEffect(() => {
-        const loadData = async () => {
-            setIsLoading(true);
-            try {
-                await fetchPublicPosts();
-            } catch (error) {
-                console.error("Error loading posts:", error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        loadData();
+        fetchPublicPosts();
     }, []);
 
 
