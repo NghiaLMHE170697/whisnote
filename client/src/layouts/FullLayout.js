@@ -17,6 +17,7 @@ const FullLayout = () => {
 
   //const location = useLocation();
   //const getTitle = location.pathname.split('/')[2];
+  const role = localStorage.getItem("role");
 
 
   return (
@@ -51,7 +52,9 @@ const FullLayout = () => {
             <div>
               <Outlet />
             </div>
-            <Customizer className={customizerToggle ? 'showCustomizer' : ''} />
+            {role === 'premium' && (
+              <Customizer className={customizerToggle ? 'showCustomizer' : ''} />
+            )}
             {showMobileSidebar || customizerToggle ? <div className="sidebarOverlay" /> : ''}
           </Container>
         </div>

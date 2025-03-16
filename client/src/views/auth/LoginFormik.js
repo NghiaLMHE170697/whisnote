@@ -19,10 +19,10 @@ const LoginFormik = () => {
   };
 
   const validationSchema = Yup.object().shape({
-    email: Yup.string().email('Email is invalid').required('Email is required'),
+    email: Yup.string().email('Email is invalid').required('Email không được để trống'),
     password: Yup.string()
-      .min(6, 'Password must be at least 6 characters')
-      .required('Password is required'),
+      .min(6, 'Mật khẩu phải có ít nhất 6 ký tự')
+      .required('Mật khẩu không được để trống'),
   });
 
   const handleLogin = async (fields, { setSubmitting, setFieldError }) => {
@@ -40,13 +40,13 @@ const LoginFormik = () => {
         localStorage.setItem('role', res.data.role);
 
 
-        Swal.fire('Login Success', res.message, 'success');
+        Swal.fire('Đăng nhập thành công', res.message, 'success');
 
         navigate('/');
       })
     } catch (error) {
       console.log(error.response.data)
-      Swal.fire('Login Failed', error.response.data.error, 'error');
+      Swal.fire('Đăng nhập thất bại', error.response.data.error, 'error');
       setFieldError('password', error.response.data.error);
     }
     setSubmitting(false);
@@ -64,9 +64,9 @@ const LoginFormik = () => {
             <AuthLogo />
             <Card>
               <CardBody className="p-4 m-1">
-                <h5 className="mb-0">Login</h5>
+                <h5 className="mb-0">Đăng nhập</h5>
                 <small className="pb-4 d-block">
-                  Do not have an account? <Link to="/auth/registerformik">Sign Up</Link>
+                  Bạn chưa có tài khoản? <Link to="/auth/registerformik">Đăng ký ngay</Link>
                 </small>
                 <Formik
                   initialValues={initialValues}
@@ -99,11 +99,11 @@ const LoginFormik = () => {
                           className="invalid-feedback"
                         />
                       </FormGroup>
-                      <FormGroup className="form-check d-flex">
+                      {/* <FormGroup className="form-check d-flex">
                         <Link className="ms-auto text-decoration-none" to="/auth/forgotPwd">
                           <small>Forgot Pwd?</small>
                         </Link>
-                      </FormGroup>
+                      </FormGroup> */}
                       <FormGroup className="d-flex justify-content-center mt-3">
                         <Button
                           type="submit"
@@ -111,7 +111,7 @@ const LoginFormik = () => {
                           className="w-100"
                           disabled={isSubmitting}
                         >
-                          {isSubmitting ? 'Logging in...' : 'Login'}
+                           {isSubmitting ? 'Đang đăng nhập...' : 'Đăng nhập'}
                         </Button>
                       </FormGroup>
                     </Form>

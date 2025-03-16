@@ -5,29 +5,36 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import ComponentCard from './ComponentCard';
 import './PostForm.css';
+import LoadingOverlay from './LoadingOverlay';
 
 function PostForm() {
   const [fileError, setFileError] = useState('');
   const [imagePreviews, setImagePreviews] = useState([]); // State for image preview URLs
   const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
   const userId = localStorage.getItem('userId');
+  const role = localStorage.getItem('role');
   const [formData, setFormData] = useState({
     content: '',
     category: '',
     privacy: 'public',
     user_id: userId,
+    role,
     medias: [] // Store actual files for upload
   });
 
   const fetchCategories = async () => {
     try {
+      setIsLoading(true);
       const response = await axios.get(`${process.env.REACT_APP_BACKEND_SERVER_URL}/categories/`);
       if (response.data.status === 'success') {
         setCategories(response.data.data);
       }
     } catch (error) {
       console.error('Fetch categories error:', error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -87,13 +94,14 @@ function PostForm() {
     e.preventDefault();
 
     try {
+      setIsLoading(true);
       // Create FormData for file upload
       const formDataToSend = new FormData();
       formDataToSend.append('content', formData.content);
       formDataToSend.append('category', formData.category);
       formDataToSend.append('privacy', formData.privacy);
       formDataToSend.append('user_id', formData.user_id);
-
+      formDataToSend.append('role', formData.role);
       // Append each image file
       formData.medias.forEach((file) => {
         formDataToSend.append('medias', file);
@@ -104,7 +112,8 @@ function PostForm() {
         category: formData.category,
         privacy: formData.privacy,
         user_id: formData.user_id,
-        medias: formData.medias
+        medias: formData.medias,
+        role: formData.role
       });
       const response = await axios.post(`${process.env.REACT_APP_BACKEND_SERVER_URL}/posts/create`, formDataToSend, {
         headers: {
@@ -129,17 +138,20 @@ function PostForm() {
     } catch (error) {
       console.error('Error creating post:', error);
       Swal.fire('Đăng bài thất bại', error.response?.data?.message || error.message, 'error');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <div>
+      {isLoading ? <LoadingOverlay /> : null}
       <Row>
         <ComponentCard>
           <Col md="12">
             <Form onSubmit={handleSubmit}>
               <FormGroup>
-                <Label>Content</Label>
+                <Label>Nội Dung</Label>
                 <Input
                   type="textarea"
                   name="content"
@@ -150,7 +162,7 @@ function PostForm() {
                 />
               </FormGroup>
               <FormGroup>
-                <Label>Category</Label>
+                <Label>Chủ đề</Label>
                 <Input
                   type="select"
                   name="category"
@@ -158,14 +170,21 @@ function PostForm() {
                   onChange={handleInputChange}
 
                 >
-                  <option value="">Select Post Category</option>
+                  <option value="">Chọn chủ đề</option>
                   {categories.map((c) => (
                     <option value={c.name}>{c.name}</option>
                   ))}
                 </Input>
               </FormGroup>
               <FormGroup>
-                <Label htmlFor="exampleFile">Choose image File</Label>
+                <Label htmlFor="exampleFile">
+                  Đăng ảnh (Tối đa 3 ảnh)
+                  {localStorage.getItem('role') === 'free' && (
+                    <span style={{ color: 'red', fontSize: '0.8rem', marginLeft: '8px' }}>
+                      (Ảnh sẽ bị xóa sau 3 tháng với tài khoản miễn phí)
+                    </span>
+                  )}
+                </Label>
                 <Input
                   type="file"
                   id="exampleFile"
@@ -177,7 +196,7 @@ function PostForm() {
                 />
                 {fileError && <div style={{ color: 'red' }}>{fileError}</div>}
                 {imagePreviews.length >= 3 && (
-                  <div style={{ color: 'green' }}>Maximum of 3 images reached.</div>
+                  <div style={{ color: 'green' }}>Đã đạt mức tối đa 3 ảnh.</div>
                 )}
               </FormGroup>
               {imagePreviews.length > 0 && (
@@ -221,7 +240,7 @@ function PostForm() {
                       checked={formData.privacy === 'public'}
                       onChange={handleInputChange}
                     />
-                    <Label check>Public</Label>
+                    <Label check>Công Khai</Label>
                   </FormGroup>
                   <FormGroup check inline>
                     <Input
@@ -231,11 +250,11 @@ function PostForm() {
                       checked={formData.privacy === 'private'}
                       onChange={handleInputChange}
                     />
-                    <Label check>Private</Label>
+                    <Label check>Riêng Tư</Label>
                   </FormGroup>
                 </FormGroup>
               </Col>
-              <Button type="submit" color="primary">Submit</Button>
+              <Button type="submit" color="primary">Đăng Bài</Button>
             </Form>
           </Col>
         </ComponentCard>

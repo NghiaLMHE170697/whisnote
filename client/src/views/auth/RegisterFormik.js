@@ -20,15 +20,15 @@ const RegisterFormik = () => {
   };
 
   const validationSchema = Yup.object().shape({
-    username: Yup.string().required('User Name is required'),
-    email: Yup.string().email('Email is invalid').required('Email is required'),
+    username: Yup.string().required('Username không được để trống'),
+    email: Yup.string().email('Email không hợp lệ').required('Email không được để trống'),
     password: Yup.string()
-      .min(6, 'Password must be at least 6 characters')
-      .required('Password is required'),
+      .min(6, 'Mật khẩu phải có ít nhất 6 ký tự')
+      .required('Mật khẩu không được để trống'),
     confirmPassword: Yup.string()
-      .oneOf([Yup.ref('password'), null], 'Passwords must match')
-      .required('Confirm Password is required'),
-    acceptTerms: Yup.bool().oneOf([true], 'Accept Terms & Conditions is required'),
+      .oneOf([Yup.ref('password'), null], 'Mật khẩu không khớp')
+      .required('Mật khẩu không được để trống'),
+    acceptTerms: Yup.bool().oneOf([true], 'Đồng ý với Điều Khoản & Dịch Vụ'),
   });
 
   const handleRegister = async (fields) => {
@@ -47,8 +47,8 @@ const RegisterFormik = () => {
       if (response.ok) {
         Swal.fire({
           icon: 'success',
-          title: 'Registration Successful!',
-          text: 'Your account has been created.',
+          title: 'Đăng ký thành công!',
+          text: 'Tài khoản của bạn đã được tạo.',
           confirmButtonText: 'OK',
         }).then((result) => {
           if (result.isConfirmed) {
@@ -58,11 +58,11 @@ const RegisterFormik = () => {
       } else {
         const errorData = await response.json();
         console.log(errorData)
-        Swal.fire('Register Failed', errorData.error, 'error');
+        Swal.fire('Đăng ký thất bại', errorData.error, 'error');
       }
     } catch (error) {
       console.error('Error:', error);
-      Swal.fire('Register Failed', error.error, 'error');
+      Swal.fire('Đăng ký thất bại', error.error, 'error');
 
     }
   };
@@ -77,9 +77,9 @@ const RegisterFormik = () => {
             <AuthLogo />
             <Card>
               <CardBody className="p-4 m-1">
-                <h5 className="mb-0">Register</h5>
+                <h5 className="mb-0">Đăng ký</h5>
                 <small className="pb-4 d-block">
-                  Already have an account? <Link to="/auth/login">Login</Link>
+                  Bạn đã có tài khoản? <Link to="/auth/login">Đăng nhập ngay</Link>
                 </small>
                 <Formik
                   initialValues={initialValues}
@@ -149,7 +149,7 @@ const RegisterFormik = () => {
                             }`}
                         />
                         <Label htmlFor="acceptTerms" className="form-check-label">
-                          Accept Terms & Conditions
+                          Đồng ý với Điều Khoản & Dịch Vụ
                         </Label>
                         <ErrorMessage
                           name="acceptTerms"
@@ -159,7 +159,7 @@ const RegisterFormik = () => {
                       </FormGroup>
                       <FormGroup>
                         <Button type="submit" color="primary" className="me-2">
-                          Register
+                          Đăng ký
                         </Button>
                         <Button type="reset" color="secondary">
                           Reset

@@ -3,7 +3,16 @@ const bcrypt = require("bcrypt");
 
 const UserSchema = new mongoose.Schema(
   {
-    phone: { type: String, default: null },
+    phone: {
+      type: String,
+      default: null,
+      validate: {
+        validator: function (v) {
+          return v === null || /^\+?\d{10,15}$/.test(v);
+        },
+        message: 'Sai định dạng số điện thoại'
+      }
+    },
     password: { type: String, required: true },
     username: {
       type: String,
@@ -17,7 +26,11 @@ const UserSchema = new mongoose.Schema(
     post_count: { type: Number, default: 0 },
     followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     following: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-
+    social: {
+      facebook: { type: String, default: "" },
+      twitter: { type: String, default: "" },
+      tiktok: { type: String, default: "" }
+    },
     // 🔹 Thêm OTP và trạng thái xác minh
     otp: { type: String, default: null },  // Mã OTP
     otp_expiry: { type: Date, default: null }, // Thời gian hết hạn OTP

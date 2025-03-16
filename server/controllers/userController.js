@@ -1,4 +1,5 @@
 const User = require("../models/User.js");
+const { uploadImageFile } = require("../cloudFly.config/objectStorage");
 const JwtProvider = require("../provider/JwtProvider");
 const bcrypt = require('bcrypt');
 const mongoose = require("mongoose");
@@ -219,6 +220,100 @@ exports.upgradePlan = async (req, res) => {
   } catch (error) {
     console.error('Upgrade error:', error);
     res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+exports.updateProfile = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { username, phone, facebook, twitter, tiktok } = req.body;
+    const avatarFile = req.file;
+
+    if (!userId) {
+      return res.status(400).json({ message: 'Không tìm thấy người dùng' });
+    }
+
+    if (!username) {
+      return res.status(400).json({ message: 'Username không được bỏ trống' });
+    }
+    if (phone && !/^\+?\d{10,15}$/.test(phone)) {
+      return res.status(400).json({ message: 'Sai định dạng số điện thoại' });
+    }
+
+    const social = {
+      facebook: facebook || '',
+      twitter: twitter || '',
+      tiktok: tiktok || ''
+    };
+
+    // Validate social URLs
+    if (social.facebook) {
+      const fbRegex = /^(https?:\/\/)?(www\.)?facebook\.com\/[a-zA-Z0-9.]{5,}\/?$/i;
+      if (!fbRegex.test(social.facebook)) {
+        return res.status(400).json({ message: 'Sai định dạng Facebook' });
+      }
+    }
+
+    if (social.twitter) {
+      const twRegex = /^(https?:\/\/)?(www\.)?(x\.com|twitter\.com)\/[a-zA-Z0-9_]{1,15}\/?$/i;
+      if (!twRegex.test(social.twitter)) {
+        return res.status(400).json({ message: 'Sai định dạng Twitter' });
+      }
+    }
+
+    if (social.tiktok) {
+      const ttRegex = /^(https?:\/\/)?(www\.)?tiktok\.com\/@[a-zA-Z0-9._-]{2,24}\/?$/i;
+      if (!ttRegex.test(social.tiktok)) {
+        return res.status(400).json({ message: 'Sai định dạng TikTok' });
+      }
+    }
+
+    let avatarUrl = null;
+    if (avatarFile) {
+      // Upload to CloudFly (similar to post images)
+      const uploadResult = await uploadImageFile(
+        avatarFile,
+        `avatar-${Date.now()}-${userId}`,
+        "user-image"
+      );
+
+      if (uploadResult.status !== 200) {
+        return res.status(500).json({
+          message: "Avatar upload failed",
+          error: uploadResult.error
+        });
+      }
+
+      avatarUrl = uploadResult.url;
+    }
+
+    // Prepare update data
+    const updateData = {
+      username,
+      phone: phone || null,
+      social: {
+        facebook: facebook || '',
+        twitter: twitter || '',
+        tiktok: tiktok || ''
+      },
+      ...(avatarUrl && { avatar: avatarUrl })
+    };
+
+    // Update user in database
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      updateData,
+      { new: true, runValidators: true }
+    ).select('-password');
+
+    res.json({
+      message: 'Cật nhật hồ sơ thành công',
+      data: updatedUser
+    });
+
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 }
 

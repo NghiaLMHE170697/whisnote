@@ -22,16 +22,83 @@ import {
   Label,
   Input,
 } from 'reactstrap';
-
+import Swal from 'sweetalert2';
+import * as yup from 'yup';
+import './Profile.css'
+import LoadingOverlay from '../../components/LoadingOverlay';
 
 import img1 from '../../assets/images/users/user1.jpg';
 
+const validationSchema = yup.object().shape({
+  username: yup.string().required('Username không được bỏ trống'),
+  phone: yup
+    .string()
+    .nullable()
+    .transform((value) => (value === '' ? null : value))
+    .test(
+      'phone-format',
+      'Sai định dạng số điện thoại',
+      (value) => !value || /^\+?\d{10,15}$/.test(value)
+    ),
+  social: yup.object().shape({
+    facebook: yup.string().url('Sai định dạng URL Facebook').nullable(),
+    twitter: yup.string().url('Sai định dạng URL Twitter').nullable(),
+    tiktok: yup.string().url('Sai định dạng URL Tiktok').nullable(),
+  }),
+  avatar: yup.mixed().nullable(), // Optional file field
+});
+
 const Profile = () => {
   const [activeTab, setActiveTab] = useState('1');
+  const [fileError, setFileError] = useState('');
+  const [imagePreview, setImagePreview] = useState(null);  // Instead of imagePreviews array
   const [posts, setPosts] = useState([]);
   const [profile, setProfile] = useState({});
   const { userId } = useParams();
+  const [isLoading, setIsLoading] = useState(false);
   const currentUserId = localStorage.getItem('userId');
+  const [formData, setFormData] = useState({
+    username: '',
+    phone: '',
+    social: {
+      facebook: '',
+      twitter: '',
+      tiktok: ''
+    },
+    avatar: null // Store actual files for upload
+  });
+
+  // Cleanup effect
+  useEffect(() => {
+    return () => {
+      if (imagePreview) {
+        URL.revokeObjectURL(imagePreview);
+      }
+    };
+  }, [imagePreview]);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      setFileError('Vui lòng chọn file ảnh hợp lệ');
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {  // 5MB limit
+      setFileError('File ảnh không được vượt quá 5MB');
+      return;
+    }
+
+    const preview = URL.createObjectURL(file);
+    setImagePreview(preview);
+    setFormData(prev => ({
+      ...prev,
+      avatar: file
+    }));
+    setFileError('');
+  };
 
   const fetchProfilePost = async () => {
     try {
@@ -46,6 +113,12 @@ const Profile = () => {
     try {
       const response = await axios.get(`${process.env.REACT_APP_BACKEND_SERVER_URL}/users/${userId}`);
       setProfile(response.data.data);
+      setFormData({
+        username: response.data.data.username || '',
+        phone: response.data.data.phone || '',
+        social: response.data.data.social || { facebook: '', twitter: '', tiktok: '' },
+        avatar: null // We'll use avatar only when the user selects a new image
+      });
     } catch (err) {
       console.log("Error fetching user detail: ", err);
     }
@@ -65,6 +138,7 @@ const Profile = () => {
         return post;
       }))
       // Send API request to update like status
+      setIsLoading(true);
       await axios.post(`${process.env.REACT_APP_BACKEND_SERVER_URL}/posts/like/${postId}`, {
         userId: currentUserId
       });
@@ -80,13 +154,87 @@ const Profile = () => {
         }
         return post;
       }));
+    } finally {
+      setIsLoading(false);
     }
   };
 
+  const handleUpdateProfile = async (e) => {
+    e.preventDefault();
+    try {
+      await validationSchema.validate(formData, { abortEarly: false });
+      // If valid, build your FormData for submission
+      setIsLoading(true);
+      const updatedData = new FormData();
+      updatedData.append('username', formData.username);
+      updatedData.append('phone', formData.phone);
+      updatedData.append('facebook', formData.social?.facebook || '');
+      updatedData.append('twitter', formData.social?.twitter || '');
+      updatedData.append('tiktok', formData.social?.tiktok || '');
+
+      if (formData.avatar) {
+        updatedData.append('avatar', formData.avatar);
+      }
+      const response = await axios.put(
+        `${process.env.REACT_APP_BACKEND_SERVER_URL}/users/update-profile/${currentUserId}`,
+        updatedData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+      setIsLoading(false);
+      Swal.fire({
+        icon: 'success',
+        title: 'Cập nhật hồ sơ thành công',
+        text: response.message,
+        confirmButtonText: 'OK',
+        allowOutsideClick: false
+      }).then(() => {
+        setProfile(response.data.data);
+        localStorage.setItem('username', response.data.data.username);
+        if (response.data.data.avatar) {
+          localStorage.setItem('avatar', response.data.data.avatar);
+        }
+        window.location.reload();
+      })
+    } catch (error) {
+      if (error instanceof yup.ValidationError) {
+        // Gather all error messages into one string
+        const errorMessages = error.inner.map((err) => err.message).join(', ');
+        Swal.fire({
+          icon: 'error',
+          title: 'Cập nhật hồ sơ thất bại',
+          text: errorMessages,
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Cập nhật hồ sơ thất bại',
+          text: error.message,
+        });
+        console.error('Error updating profile:', error);
+      }
+    }
+  }
+
   useEffect(() => {
-    fetchProfilePost();
-    fetchUserProfile();
-  }, []);
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        fetchProfilePost();
+        fetchUserProfile();
+      } catch (error) {
+        console.log("Error fetching data: ", error)
+      } finally {
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 1000)
+      }
+    }
+    fetchData();
+  }, [userId]);
 
   const toggle = (tab) => {
     if (activeTab !== tab) {
@@ -96,7 +244,7 @@ const Profile = () => {
 
   return (
     <>
-
+      {isLoading ? <LoadingOverlay /> : null}
       <Row>
         <Col xs="12" md="12" lg="4">
           <Card>
@@ -117,19 +265,24 @@ const Profile = () => {
                 <CardTitle tag="h4">
                   {profile.phone ? profile.phone : <span className='text-muted fs-5 mt-3'>Không khả dụng</span>}
                 </CardTitle>
-                <CardSubtitle className="text-muted fs-5 mt-3">Address</CardSubtitle>
-                <CardTitle tag="h4">71 Pilgrim Avenue Chevy Chase, MD 20815</CardTitle>
-                <div>
-                  <Iframe
-                    className="position-relative"
-                    url="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d470029.1604841957!2d72.29955005258641!3d23.019996818380896!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e848aba5bd449%3A0x4fcedd11614f6516!2sAhmedabad%2C+Gujarat!5e0!3m2!1sen!2sin!4v1493204785508"
-                    width="280"
-                    height="150"
-                    frameborder="0"
-                    allowfullscreen
-                  />
-                </div>
-
+                {profile.role === "premium" && (
+                  <>
+                    <CardSubtitle className="text-muted fs-5 mt-3">Ngày hết hạn Premium</CardSubtitle>
+                    <CardTitle tag="h4">{new Date(profile.premium_expiry).toLocaleDateString('vi-VN')}</CardTitle>
+                  </>
+                )}
+              </div>
+              <CardSubtitle className="text-muted fs-5 mt-3 mb-2">Social Profile</CardSubtitle>
+              <div className="d-flex align-items-center gap-2">
+                <Button className="btn-circle" color="info" onClick={() => window.open(profile.social?.facebook, '_blank')}>
+                  <i className="bi bi-facebook"></i>
+                </Button>
+                <Button className="btn-circle" color="success" onClick={() => window.open(profile.social?.twitter, '_blank')}>
+                  <i className="bi bi-twitter"></i>
+                </Button>
+                <Button className="btn-circle" color="dark" onClick={() => window.open(profile.social?.tiktok, '_blank')}>
+                  <i className="bi bi-tiktok"></i>
+                </Button>
               </div>
             </CardBody>
           </Card>
@@ -147,26 +300,18 @@ const Profile = () => {
                   Timeline
                 </NavLink>
               </NavItem>
-              {/* <NavItem>
-                <NavLink
-                  className={activeTab === '2' ? 'active bg-transparent' : 'cursor-pointer'}
-                  onClick={() => {
-                    toggle('2');
-                  }}
-                >
-                  Profile
-                </NavLink>
-              </NavItem> */}
-              <NavItem>
-                <NavLink
-                  className={activeTab === '3' ? 'active bg-transparent' : 'cursor-pointer'}
-                  onClick={() => {
-                    toggle('3');
-                  }}
-                >
-                  Setting
-                </NavLink>
-              </NavItem>
+              {currentUserId === userId && (
+                <NavItem>
+                  <NavLink
+                    className={activeTab === '2' ? 'active bg-transparent' : 'cursor-pointer'}
+                    onClick={() => {
+                      toggle('2');
+                    }}
+                  >
+                    Setting
+                  </NavLink>
+                </NavItem>
+              )}
             </Nav>
             <TabContent activeTab={activeTab}>
               <TabPane tabId="1">
@@ -194,14 +339,29 @@ const Profile = () => {
                                   {post.content}
                                 </p>
                                 {post.medias.length > 0 && (
-                                  <Row className="ms-1">
+                                  <Row className="ms-1 g-2" style={{ maxHeight: '400px', overflow: 'hidden' }}>
                                     {post.medias.map((media) => (
-                                      <Col lg="3" md="6" className="mb-3">
-                                        <img
-                                          src={media.url}
-                                          className="img-fluid rounded"
-                                          alt="Post media"
-                                        />
+                                      <Col lg="3" md="6" className="mb-3" key={media.url}>
+                                        <div style={{
+                                          aspectRatio: '1/1',
+                                          position: 'relative',
+                                          overflow: 'hidden',
+                                          borderRadius: '8px'
+                                        }}>
+                                          <img
+                                            src={media.url}
+                                            className="img-fluid"
+                                            alt="Post media"
+                                            style={{
+                                              width: '100%',
+                                              height: '100%',
+                                              objectFit: 'cover',
+                                              position: 'absolute',
+                                              top: 0,
+                                              left: 0
+                                            }}
+                                          />
+                                        </div>
                                       </Col>
                                     ))}
                                   </Row>
@@ -225,111 +385,135 @@ const Profile = () => {
                   </Col>
                 </Row>
               </TabPane>
-              {/* <TabPane tabId="2">
-                <Row>
-                  <Col sm="12">
-                    <div className="p-4">
-                      <Row>
-                        <Col md="3" xs="6" className="border-end">
-                          <strong>Full Name</strong>
-                          <br />
-                          <p className="text-muted">Johnathan Deo</p>
-                        </Col>
-                        <Col md="3" xs="6" className="border-end">
-                          <strong>Mobile</strong>
-                          <br />
-                          <p className="text-muted">(123) 456 7890</p>
-                        </Col>
-                        <Col md="3" xs="6" className="border-end">
-                          <strong>Email</strong>
-                          <br />
-                          <p className="text-muted">johnathan@admin.com</p>
-                        </Col>
-                        <Col md="3" xs="6" className="border-end">
-                          <strong>Location</strong>
-                          <br />
-                          <p className="text-muted">London</p>
-                        </Col>
-                      </Row>
-                      <p className="mt-4">
-                        Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim
-                        justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis
-                        eu pede mollis pretium. Integer tincidunt.Cras dapibus. Vivamus elementum
-                        semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor
-                        eu, consequat vitae, eleifend ac, enim.
-                      </p>
-                      <p>
-                        Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                        Lorem Ipsum has been the industry&apos;s standard dummy text ever since the
-                        1500s, when an unknown printer took a galley of type and scrambled it to
-                        make a type specimen book. It has survived not only five centuries
-                      </p>
-                      <p>
-                        It was popularised in the 1960s with the release of Letraset sheets
-                        containing Lorem Ipsum passages, and more recently with desktop publishing
-                        software like Aldus PageMaker including versions of Lorem Ipsum.
-                      </p>
-                      <h4 className="font-medium mt-4">Skill Set</h4>
-                      <hr />
-                      <h5 className="mt-4">
-                        Wordpress <span className="float-end">80%</span>
-                      </h5>
-                      <Progress value={2 * 5} />
-                      <h5 className="mt-4">
-                        HTML 5 <span className="float-end">90%</span>
-                      </h5>
-                      <Progress color="success" value="25" />
-                      <h5 className="mt-4">
-                        jQuery <span className="float-end">50%</span>
-                      </h5>
-                      <Progress color="info" value={50} />
-                      <h5 className="mt-4">
-                        Photoshop <span className="float-end">70%</span>
-                      </h5>
-                      <Progress color="warning" value={75} />
-                    </div>
-                  </Col>
-                </Row>
-              </TabPane> */}
-              <TabPane tabId="3">
-                <Row>
-                  <Col sm="12">
-                    <div className="p-4">
-                      <Form>
-                        <FormGroup>
-                          <Label>Username</Label>
-                          <Input type="text" placeholder="Shaina Agrawal" />
-                        </FormGroup>
-                        <FormGroup>
-                          <Label>Email</Label>
-                          <Input type="email" placeholder="Jognsmith@cool.com" />
-                        </FormGroup>
-                        {/* <FormGroup>
-                          <Label>Password</Label>
-                          <Input type="password" placeholder="Password" />
-                        </FormGroup> */}
-                        <FormGroup>
-                          <Label>Phone No</Label>
-                          <Input type="text" placeholder="123 456 1020" />
-                        </FormGroup>
-                        {/* <FormGroup>
-                          <Label>Message</Label>
-                          <Input type="textarea" />
-                        </FormGroup>
-                        <FormGroup>
-                          <Label>Select Country</Label>
-                          <Input type="select">
-                            <option>USA</option>
-                            <option>India</option>
-                            <option>America</option>
-                          </Input>
-                        </FormGroup> */}
-                        <Button color="primary">Update Profile</Button>
-                      </Form>
-                    </div>
-                  </Col>
-                </Row>
-              </TabPane>
+              {currentUserId === userId && (
+                <TabPane tabId="2">
+                  <Row>
+                    <Col sm="12">
+                      <div className="p-4">
+                        <Form onSubmit={handleUpdateProfile}>
+                          <FormGroup>
+                            <Label>Username</Label>
+                            <Input type="text" defaultValue={profile.username} onChange={(e) =>
+                              setFormData((prev) => ({ ...prev, username: e.target.value }))
+                            } />
+                          </FormGroup>
+                          <FormGroup>
+                            <Label>Phone No</Label>
+                            <Input type="text" defaultValue={profile.phone} onChange={(e) =>
+                              setFormData((prev) => ({ ...prev, phone: e.target.value }))
+                            } />
+                          </FormGroup>
+                          <div className="social-links">
+                            <FormGroup>
+                              <Label>
+                                <i className="bi bi-facebook me-2"></i>
+                                Facebook
+                              </Label>
+                              <Input
+                                type="text"
+                                name="facebook"
+                                value={formData.social.facebook}
+                                onChange={(e) =>
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    social: { ...prev.social, facebook: e.target.value },
+                                  }))
+                                }
+                                placeholder="https://facebook.com/username"
+                              />
+                            </FormGroup>
+
+                            <FormGroup>
+                              <Label>
+                                <i className="bi bi-twitter me-2"></i>
+                                Twitter
+                              </Label>
+                              <Input
+                                type="text"
+                                name="twitter"
+                                value={formData.social.twitter}
+                                onChange={(e) =>
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    social: { ...prev.social, twitter: e.target.value },
+                                  }))
+                                }
+                                placeholder="https://x.com/username"
+                              />
+                            </FormGroup>
+
+                            <FormGroup>
+                              <Label>
+                                <i className="bi bi-tiktok me-2"></i>
+                                TikTok
+                              </Label>
+                              <Input
+                                type="text"
+                                name="tiktok"
+                                value={formData.social.tiktok}
+                                onChange={(e) =>
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    social: { ...prev.social, tiktok: e.target.value },
+                                  }))
+                                }
+                                placeholder="https://tiktok.com/@username"
+                              />
+                            </FormGroup>
+                          </div>
+                          <FormGroup>
+                            <Label htmlFor="avatarUpload">
+                              Ảnh Đại Diện
+                            </Label>
+                            <Input
+                              type="file"
+                              id="avatarUpload"
+                              name="avatar"  // Changed to match backend field name
+                              accept="image/*"
+                              onChange={handleFileChange}
+                              // Removed multiple attribute
+                              disabled={!!imagePreview}  // Changed to boolean check
+                            />
+                            {fileError && <div style={{ color: 'red' }}>{fileError}</div>}
+                            {imagePreview && (
+                              <div style={{ color: 'green' }}>Ảnh đã được chọn</div>
+                            )}
+                          </FormGroup>
+
+                          {imagePreview && (
+                            <FormGroup>
+                              <Label>Xem trước ảnh đại diện</Label>
+                              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                                <div style={{ position: 'relative', display: 'inline-block' }}>
+                                  <img
+                                    src={imagePreview}
+                                    alt="Preview avatar"
+                                    className="image-preview show"
+                                  />
+                                  <button
+                                    type="button"
+                                    className="postForm-closeBtn"
+                                    onClick={() => {
+                                      setImagePreview(null);
+                                      setFormData(prev => ({
+                                        ...prev,
+                                        avatar: null
+                                      }));
+                                    }}
+                                  >
+                                    ×
+                                  </button>
+                                </div>
+                              </div>
+                            </FormGroup>
+                          )}
+                          <Button type="submit" color="primary">Cập Nhật Hồ Sơ</Button>
+                        </Form>
+                      </div>
+                    </Col>
+                  </Row>
+                </TabPane>
+              )}
             </TabContent>
           </Card>
         </Col>

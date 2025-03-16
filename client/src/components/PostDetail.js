@@ -14,8 +14,8 @@ import {
   Input,
 } from 'reactstrap';
 import { motion } from 'framer-motion';
-
 import './PostDetail.css';
+import LoadingOverlay from './LoadingOverlay';
 
 function PostDetail() {
   const [post, setPost] = useState({});
@@ -25,6 +25,7 @@ function PostDetail() {
   const [input, setInput] = useState("");
   const { postId } = useParams();
   const userId = localStorage.getItem('userId');
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchPostDetail = async () => {
     try {
@@ -53,9 +54,11 @@ function PostDetail() {
         likesCount: prev.liked ? prev.likesCount - 1 : prev.likesCount + 1
       }))
       // Send API request to update like status
+      setIsLoading(true);
       await axios.post(`${process.env.REACT_APP_BACKEND_SERVER_URL}/posts/like/${postId}`, {
         userId
       });
+      setIsLoading(false);
     } catch (err) {
       console.error("Error updating like:", err);
       setPost(prev => ({
@@ -69,6 +72,7 @@ function PostDetail() {
   const handleSendComment = async () => {
     try {
       if (!input.trim()) return;
+      setIsLoading(true);
       await axios.post(`${process.env.REACT_APP_BACKEND_SERVER_URL}/comments/add/${postId}`, {
         content: input,
         author: userId
@@ -78,13 +82,25 @@ function PostDetail() {
       })
     } catch (err) {
       console.log("Error sending comment", err);
+    } finally {
+      setIsLoading(false);
     }
   }
 
   useEffect(() => {
-    fetchPostDetail();
-    fetchPostComment();
-  }, []);
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        fetchPostDetail();
+        fetchPostComment();
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchData();
+  }, [postId]);
 
 
   const items = post.medias || [];
@@ -154,6 +170,7 @@ function PostDetail() {
 
   return (
     <div>
+      {isLoading ? <LoadingOverlay /> : null}
       <Row>
         <Col lg="12">
           <Card>
