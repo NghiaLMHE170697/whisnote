@@ -7,12 +7,13 @@ import {
 } from 'reactstrap';
 import axios from "axios";
 import img2 from '../assets/images/users/user2.jpg';
-
+import LoadingOverlay from './LoadingOverlay';
 
 
 const Feed = () => {
     const [posts, setPosts] = useState([]);
     const userId = localStorage.getItem('userId');
+    const [isLoading, setIsLoading] = useState(false);
 
     const fetchPublicPosts = async () => {
         try {
@@ -38,9 +39,11 @@ const Feed = () => {
                 return post;
             }))
             // Send API request to update like status
+            setIsLoading(true);
             await axios.post(`${process.env.REACT_APP_BACKEND_SERVER_URL}/posts/like/${postId}`, {
                 userId
             });
+            setIsLoading(false);
 
         } catch (err) {
             console.error("Error updating like:", err);
@@ -58,7 +61,9 @@ const Feed = () => {
     };
 
     useEffect(() => {
+        setIsLoading(true);
         fetchPublicPosts();
+        setIsLoading(false);
     }, []);
 
 
@@ -70,6 +75,7 @@ const Feed = () => {
             scrollbarWidth: "thin", // For Firefox
             paddingRight: "8px" // Prevent content clipping
         }}>
+            {isLoading ? <LoadingOverlay /> : null}
             <Col sm="12">
                 <div className="p-4">
                     <div className="steamline position-relative border-start ms-4 mt-0">
@@ -88,14 +94,29 @@ const Feed = () => {
                                             {post.content}
                                         </p>
                                         {post.medias.length > 0 && (
-                                            <Row className="ms-1">
+                                            <Row className="ms-1 g-2" style={{ maxHeight: '400px', overflow: 'hidden' }}>
                                                 {post.medias.map((media) => (
-                                                    <Col lg="3" md="6" className="mb-3">
-                                                        <img
-                                                            src={media.url}
-                                                            className="img-fluid rounded"
-                                                            alt="Post media"
-                                                        />
+                                                    <Col lg="3" md="6" className="mb-3" key={media.url}>
+                                                        <div style={{
+                                                            aspectRatio: '1/1',
+                                                            position: 'relative',
+                                                            overflow: 'hidden',
+                                                            borderRadius: '8px'
+                                                        }}>
+                                                            <img
+                                                                src={media.url}
+                                                                className="img-fluid"
+                                                                alt="Post media"
+                                                                style={{
+                                                                    width: '100%',
+                                                                    height: '100%',
+                                                                    objectFit: 'cover',
+                                                                    position: 'absolute',
+                                                                    top: 0,
+                                                                    left: 0
+                                                                }}
+                                                            />
+                                                        </div>
                                                     </Col>
                                                 ))}
                                             </Row>
