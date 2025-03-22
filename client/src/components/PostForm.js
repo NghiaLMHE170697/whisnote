@@ -11,7 +11,7 @@ function PostForm() {
   const [fileError, setFileError] = useState('');
   const [audioError, setAudioError] = useState('');
   const [imagePreviews, setImagePreviews] = useState([]); // State for image preview URLs
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState([]); //H
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const userId = localStorage.getItem('userId');
