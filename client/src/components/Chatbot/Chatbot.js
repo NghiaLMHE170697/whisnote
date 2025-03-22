@@ -51,7 +51,7 @@ const Chatbot = () => {
         setIsLoading(true);
 
         try {
-            const response = await axios.post('http://localhost:9999/api/gemini/chatbot', {
+            const response = await axios.post(`${process.env.REACT_APP_BACKEND_SERVER_URL}/api/gemini/chatbot`, {
                 message,
             });
 
