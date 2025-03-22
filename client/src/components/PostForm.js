@@ -143,6 +143,51 @@ function PostForm() {
     }
   };
 
+  const handleAudioUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('audio/')) {
+      setAudioError('Vui lòng chọn file audio hợp lệ.');
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const formData = new FormData();
+      formData.append('audio', file);
+      formData.append('role', role);
+      const response = await axios.post(
+        `${process.env.REACT_APP_BACKEND_SERVER_URL}/posts/audio-to-text`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+      );
+
+      if (response.data.text) {
+        setFormData(prev => ({
+          ...prev,
+          content: prev.content + (prev.content ? '\n' : '') + response.data.text
+        }));
+        setAudioError('');
+        // Clear the file input
+        if (audioInputRef.current) {
+          audioInputRef.current.value = '';
+        }
+        Swal.fire('Thành công', 'Đã chuyển đổi audio thành văn bản!', 'success');
+      }
+    } catch (error) {
+      console.error('Audio conversion error:', error);
+      setAudioError('Chuyển đổi audio thất bại. Vui lòng thử lại.');
+      Swal.fire('Lỗi', 'Chuyển đổi audio thất bại!', 'error');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div>
       {isLoading ? <LoadingOverlay /> : null}
@@ -161,6 +206,19 @@ function PostForm() {
 
                 />
               </FormGroup>
+              {role === 'premium' && (
+                <FormGroup>
+                  <Label>Tải lên audio để chuyển thành văn bản</Label>
+                  <Input
+                    type="file"
+                    accept="audio/*"
+                    onChange={handleAudioUpload}
+                    innerRef={audioInputRef}
+                    disabled={isLoading}
+                  />
+                  {audioError && <div style={{ color: 'red' }}>{audioError}</div>}
+                </FormGroup>
+              )}
               <FormGroup>
                 <Label>Chủ đề</Label>
                 <Input

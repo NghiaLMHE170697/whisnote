@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import Themeroutes from './routes/Router';
 import ThemeSelector from './layouts/theme/ThemeSelector';
 import Loader from './layouts/loader/Loader';
+import Chatbot from './components/Chatbot/Chatbot';
 
 const App = () => {
   const routing = useRoutes(Themeroutes);
@@ -15,11 +16,12 @@ const App = () => {
     <Suspense fallback={<Loader />}>
       <div
         className={` ${isMode ? 'dark' : ''}`}
-        // dir={direction ? 'rtl' : 'ltr'}
+      // dir={direction ? 'rtl' : 'ltr'}
       >
         <ThemeSelector />
         {routing}
       </div>
+      <Chatbot />
     </Suspense>
   );
 };

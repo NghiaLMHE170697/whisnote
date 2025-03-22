@@ -19,7 +19,7 @@ const PricingData = [
         originalPrice: null,
         billingPeriod: 'hàng tháng',
         discount: 0,
-        features: ['Không giới hạn bài đăng 1 ngày', 'Không giới hạn số từ và ký tự', 'Tuỳ chỉnh giao diện website'],
+        features: ['Không giới hạn bài đăng 1 ngày', 'Không giới hạn số từ và ký tự', 'Tuỳ chỉnh giao diện website', 'Sử dụng giọng nói để viết bài'],
         btnbg: 'primary'
     },
     {
@@ -28,7 +28,7 @@ const PricingData = [
         originalPrice: '150,000', // 25,000 x 6 = 150,000
         billingPeriod: '20,833₫/tháng', // 125,000 ÷ 6 ≈ 20,833
         discount: 17, // (25,000 discount ÷ 150,000 original) ≈ 16.67%
-        features: ['Không giới hạn bài đăng 1 ngày', 'Không giới hạn số từ và ký tự', 'Tuỳ chỉnh giao diện website'],
+        features: ['Không giới hạn bài đăng 1 ngày', 'Không giới hạn số từ và ký tự', 'Tuỳ chỉnh giao diện website', 'Sử dụng giọng nói để viết bài'],
         btnbg: 'success'
     },
     {
@@ -37,7 +37,7 @@ const PricingData = [
         originalPrice: '300,000', // 25,000 x 12 = 300,000
         billingPeriod: '16,667₫/tháng', // 200,000 ÷ 12 ≈ 16,667
         discount: 33, // (100,000 discount ÷ 300,000 original) ≈ 33.33%
-        features: ['Không giới hạn bài đăng 1 ngày', 'Không giới hạn số từ và ký tự', 'Tuỳ chỉnh giao diện website'],
+        features: ['Không giới hạn bài đăng 1 ngày', 'Không giới hạn số từ và ký tự', 'Tuỳ chỉnh giao diện website', 'Sử dụng giọng nói để viết bài'],
         btnbg: 'info'
     }
 ];

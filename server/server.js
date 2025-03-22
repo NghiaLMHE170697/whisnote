@@ -22,7 +22,8 @@ const {
     userRouter,
     postRouter,
     categoryRouter,
-    commentRouter
+    commentRouter,
+    geminiRouter,
 } = require("./routes");
 
 
@@ -88,6 +89,7 @@ app.use("/users", userRouter);
 app.use("/posts", postRouter);
 app.use("/categories", categoryRouter);
 app.use("/comments", commentRouter);
+app.use("/api/gemini", geminiRouter);
 app.post("/create-payment-link", async (req, res) => {
     try {
         const { plan } = req.body;

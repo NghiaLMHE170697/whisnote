@@ -2,6 +2,9 @@ const Post = require("../models/Post");
 const Category = require("../models/Category");
 const { uploadImageFile } = require("../cloudFly.config/objectStorage");
 const { getTimeDifference, getVietNamDateFormat } = require("../middleware/general.middleware");
+const { Readable } = require("stream");
+const FormData = require("form-data");
+const { default: axios } = require("axios");
 
 // Common post transformation logic
 const transformPost = (post, userId) => ({
@@ -285,6 +288,38 @@ const getPostById = async (req, res) => {
   }
 }
 
+const getTextfromAudio = async (req, res) => {
+  try {
+    const { body, file } = req;
+    console.log("👉 Received body:", body);
+    console.log("👉 Received files:", file);
+    if (file.mimetype.startsWith("audio/")) {
+      const audioStream = Readable.from(file.buffer);
+      const form = new FormData();
+      form.append("file", audioStream, {
+        filename: file.originalname,
+        contentType: file.mimetype
+      });
+      form.append("model", "whisper-1");
+
+      const response = await axios.post(
+        "https://api.openai.com/v1/audio/transcriptions",
+        form,
+        {
+          headers: {
+            ...form.getHeaders(),
+            Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
+          }
+        }
+      )
+
+      res.status(200).json({ text: response.data.text });
+    }
+  } catch (error) {
+    res.status(500).json({ status: 500, message: error.message });
+  }
+}
+
 module.exports = {
   createPost,
   getPublicPosts,
@@ -293,4 +328,5 @@ module.exports = {
   deletePost,
   updateLikePost,
   getPostById,
+  getTextfromAudio,
 };

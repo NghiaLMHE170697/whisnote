@@ -29,5 +29,6 @@ router.get("/public/:userId", postController.getPublicPosts); // 🟢 Route mớ
 router.get("/profile/:userId/:currentUserId", postController.getProfilePosts); // 🟢 Route mới để lấy bài viết Private
 router.get("/:postId/:userId", postController.getPostById);
 router.post("/like/:postId", postController.updateLikePost);
+router.post("/audio-to-text", upload.single('audio'), postController.getTextfromAudio);
 
 module.exports = router;
