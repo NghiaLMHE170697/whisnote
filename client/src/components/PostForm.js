@@ -183,8 +183,33 @@ function PostForm() {
       }
     } catch (error) {
       console.error('Audio conversion error:', error);
-      setAudioError('Chuyển đổi audio thất bại. Vui lòng thử lại.');
-      Swal.fire('Lỗi', 'Chuyển đổi audio thất bại!', 'error');
+      // Handle different error types
+      let errorMessage = 'Chuyển đổi audio thất bại. Vui lòng thử lại.';
+
+      if (error.response) {
+        // Server responded with error status
+        switch (error.response.status) {
+          case 413:
+            errorMessage = `File quá lớn! ${error.response.data?.error || 'Kích thước tối đa 4MB'
+              }`;
+            break;
+          case 415:
+            errorMessage = `Định dạng file không hỗ trợ. ${error.response.data?.allowedTypes?.join(', ') || ''
+              }`;
+            break;
+          case 500:
+            errorMessage = 'Lỗi server. Vui lòng thử lại sau.';
+            break;
+          default:
+            errorMessage = error.response.data?.message || errorMessage;
+        }
+      } else if (error.request) {
+        // Request was made but no response received
+        errorMessage = 'Không thể kết nối đến server. Vui lòng kiểm tra kết nối mạng.';
+      }
+
+      setAudioError(errorMessage);
+      Swal.fire('Lỗi', errorMessage, 'error');
     } finally {
       setIsLoading(false);
     }
