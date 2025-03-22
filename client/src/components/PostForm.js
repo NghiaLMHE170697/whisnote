@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Row, Col, Form, FormGroup, Label, Input, Button } from 'reactstrap';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -9,12 +9,14 @@ import LoadingOverlay from './LoadingOverlay';
 
 function PostForm() {
   const [fileError, setFileError] = useState('');
+  const [audioError, setAudioError] = useState('');
   const [imagePreviews, setImagePreviews] = useState([]); // State for image preview URLs
   const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const userId = localStorage.getItem('userId');
   const role = localStorage.getItem('role');
+  const audioInputRef = useRef(null);
   const [formData, setFormData] = useState({
     content: '',
     category: '',
@@ -154,12 +156,12 @@ function PostForm() {
 
     try {
       setIsLoading(true);
-      const formData = new FormData();
-      formData.append('audio', file);
-      formData.append('role', role);
+      const audioForm = new FormData();
+      audioForm.append('audio', file);
+      audioForm.append('role', role);
       const response = await axios.post(
         `${process.env.REACT_APP_BACKEND_SERVER_URL}/posts/audio-to-text`,
-        formData,
+        audioForm,
         {
           headers: {
             'Content-Type': 'multipart/form-data'
