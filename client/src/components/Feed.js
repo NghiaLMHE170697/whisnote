@@ -171,11 +171,7 @@ const Feed = () => {
             <Col sm="12">
                 <div className="p-4">
                     {isLoading ? (
-                        <div className="text-center py-5">
-                            <div className="spinner-border text-primary" role="status">
-                                <span className="visually-hidden">Loading...</span>
-                            </div>
-                        </div>
+                        <LoadingOverlay />
                     ) : posts.length === 0 ? (
                         <div className="text-center py-5">
                             <p className="text-muted">No posts found</p>
