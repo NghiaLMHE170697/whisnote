@@ -131,26 +131,6 @@ const Header = () => {
         {/******************************/}
         {/**********Message DD**********/}
         {/******************************/}
-        <UncontrolledDropdown className="mx-1">
-          <DropdownToggle color={topbarColor}>
-            <MessageSquare size={22} />
-          </DropdownToggle>
-          <DropdownMenu className="ddWidth">
-            <DropdownItem header>
-              <span className="mb-0 fs-5 text-dark fw-medium">Messages</span>
-            </DropdownItem>
-            <DropdownItem divider />
-            <SimpleBar style={{ maxHeight: '350px' }}>
-              <MessageDD />
-            </SimpleBar>
-            <DropdownItem divider />
-            <div className="p-2 px-3">
-              <Button color="primary" size="sm" block>
-                Check All
-              </Button>
-            </div>
-          </DropdownMenu>
-        </UncontrolledDropdown>
         {/******************************/}
         {/**********Mega DD**********/}
         {/******************************/}
