@@ -1,22 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import SimpleBar from 'simplebar-react';
 import {
   Navbar,
   Nav,
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
-  DropdownItem,
   Button,
   Badge
 } from 'reactstrap';
-import { MessageSquare, ArrowUpRight, CheckCircle } from 'react-feather';
+import { ArrowUpRight, CheckCircle } from 'react-feather';
 import * as Icon from 'react-feather';
-import MessageDD from './MessageDD';
-//import MegaDD from './MegaDD';
-// import NotificationDD from './NotificationDD';
 import user1 from '../../assets/images/users/user4.jpg';
 import { ToggleMiniSidebar, ToggleMobileSidebar } from '../../store/customizer/CustomizerSlice';
 import ProfileDD from './ProfileDD';

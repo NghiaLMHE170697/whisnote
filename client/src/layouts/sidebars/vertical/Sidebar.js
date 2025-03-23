@@ -3,11 +3,7 @@ import {
   Button,
   Nav,
   UncontrolledDropdown,
-  DropdownItem,
-  DropdownToggle,
-  DropdownMenu,
 } from 'reactstrap';
-import { User, FileText, Star, Settings, Droplet } from 'react-feather';
 import { useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import SimpleBar from 'simplebar-react';
@@ -48,32 +44,9 @@ const Sidebar = () => {
         <div className="py-4 text-center profile-area">
           <img src={avatar} alt="John Deo" width={80} className="rounded-circle mb-2" />
           <UncontrolledDropdown>
-            <DropdownToggle caret className="bg-transparent border-0">
+            <div caret className="bg-transparent border-0">
               {username}
-            </DropdownToggle>
-            <DropdownMenu className='w-100 border'>
-              <DropdownItem className="px-4 py-3">
-                <User size={20} className="text-muted" />
-                &nbsp; My Profile
-              </DropdownItem>
-              <DropdownItem className="px-4 py-3">
-                <FileText size={20} className="text-muted" />
-                &nbsp; Edit Profile
-              </DropdownItem>
-              <DropdownItem className="px-4 py-3">
-                <Star size={20} className="text-muted" />
-                &nbsp; My Balance
-              </DropdownItem>
-              <DropdownItem className="px-4 py-3">
-                <Droplet size={20} className="text-muted" />
-                &nbsp; Customize
-              </DropdownItem>
-              <DropdownItem divider />
-              <DropdownItem className="px-4 py-3">
-                <Settings size={20} className="text-muted" />
-                &nbsp; Settings
-              </DropdownItem>
-            </DropdownMenu>
+            </div>
           </UncontrolledDropdown>
         </div>
         <div>

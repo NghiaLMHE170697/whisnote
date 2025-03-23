@@ -1,6 +1,6 @@
 import React from 'react';
 import { DropdownItem } from 'reactstrap';
-import { User, Star } from 'react-feather';
+import { User } from 'react-feather';
 import { useNavigate } from 'react-router-dom';
 import user1 from '../../assets/images/users/user1.jpg';
 
@@ -22,10 +22,6 @@ const ProfileDD = () => {
       <DropdownItem className="px-4 py-3" onClick={() => navigate(`/profile/${userId}`)}>
         <User size={20} className="text-muted" />
         &nbsp; My Profile
-      </DropdownItem>
-      <DropdownItem className="px-4 py-3">
-        <Star size={20} className="text-muted" />
-        &nbsp; My Balance
       </DropdownItem>
       {/* <DropdownItem className="px-4 py-3">
         <Droplet size={20} className="text-muted" />
