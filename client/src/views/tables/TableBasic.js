@@ -1,314 +1,78 @@
-import React from 'react';
-import { Table } from 'reactstrap';
-
+import { useState, useEffect } from 'react';
+import { Pie } from 'react-chartjs-2';
+import { Chart, registerables } from 'chart.js';
+import axios from 'axios';
 import ComponentCard from '../../components/ComponentCard';
 import ProjectTables from '../../components/dashboard/extraDashboard/ProjectTable';
 
+Chart.register(...registerables);
+
 const BasicTable = () => {
+  const [chartData, setChartData] = useState({
+    free: 0,
+    premium: 0,
+    total: 0
+  });
+
+  useEffect(() => {
+    const fetchRoleData = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_BACKEND_SERVER_URL}/users/admin/user/role-counts`
+        );
+        setChartData(response.data.data);
+      } catch (error) {
+        console.error('Error fetching role data:', error);
+      }
+    };
+
+    fetchRoleData();
+  }, []);
+
+  const pieData = {
+    labels: ['Free Users', 'Premium Users'],
+    datasets: [
+      {
+        data: [chartData.free, chartData.premium],
+        backgroundColor: ['#2dce89', '#5e72e4'],
+        hoverBackgroundColor: ['#24a46d', '#4b5cb7'],
+      },
+    ],
+  };
+
   return (
     <>
-      
+      <ComponentCard title="Pie Chart">
+        <div className="chart-wrapper" style={{ width: '100%', margin: '0 auto', height: 350 }}>
+          <h4>User Distribution ({chartData.total} Total Users)</h4>
+          <Pie
+            data={pieData}
+            options={{
+              maintainAspectRatio: false,
+              legend: {
+                display: true,
+                labels: {
+                  fontFamily: 'Nunito Sans, sans-sarif',
+                  fontColor: '#8898aa',
+                },
+              },
+            }}
+          />
+        </div>
+      </ComponentCard>
       {/*--------------------------------------------------------------------------------*/}
       {/* Start Inner Div*/}
       {/*--------------------------------------------------------------------------------*/}
       <ComponentCard
-        title="Project Listing"
+        title="User Listing"
         subtitle={
           <p>
-            Overview of the projects
+            Overview of the users
           </p>
         }
       >
         <ProjectTables />
       </ComponentCard>
-      
-
-      {/*--------------------------------------------------------------------------------*/}
-      {/* Default Table                                                                  */}
-      {/*--------------------------------------------------------------------------------*/}
-
-      <ComponentCard
-        title="Default Table"
-        subtitle={
-          <p>
-            Using the most basic table markup, here’s how <code>Table</code>-based tables look in
-            Reactstrap. All table styles are inherited in Bootstrap 4, meaning any nested tables
-            will be styled in the same manner as the parent.
-          </p>
-        }
-      >
-        <Table responsive>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Username</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Jacob</td>
-              <td>Thornton</td>
-              <td>@fat</td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td>Larry</td>
-              <td>the Bird</td>
-              <td>@twitter</td>
-            </tr>
-          </tbody>
-        </Table>
-      </ComponentCard>
-
-      {/*--------------------------------------------------------------------------------*/}
-      {/* Table Header                                                                   */}
-      {/*--------------------------------------------------------------------------------*/}
-
-      <ComponentCard
-        title="Table Header"
-        subtitle={
-          <p>
-            Similar to tables, use the modifier classes .thead-light to make
-            <code>&lt;thead&gt;</code>s appear light.
-          </p>
-        }
-      >
-        <Table responsive>
-          <thead className="thead-light">
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">First</th>
-              <th scope="col">Last</th>
-              <th scope="col">Handle</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Jacob</td>
-              <td>Thornton</td>
-              <td>@fat</td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td>Larry</td>
-              <td>the Bird</td>
-              <td>@twitter</td>
-            </tr>
-          </tbody>
-        </Table>
-      </ComponentCard>
-
-      {/*--------------------------------------------------------------------------------*/}
-      {/* Striped rows                                                                   */}
-      {/*--------------------------------------------------------------------------------*/}
-
-      <ComponentCard
-        title="Striped rows"
-        subtitle={
-          <p>
-            Use <code>striped</code> to add zebra-striping to any table row within the{' '}
-            <code>&lt;tbody&gt;</code>.
-          </p>
-        }
-      >
-        <Table striped responsive>
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">First</th>
-              <th scope="col">Last</th>
-              <th scope="col">Handle</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Jacob</td>
-              <td>Thornton</td>
-              <td>@fat</td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td>Larry</td>
-              <td>the Bird</td>
-              <td>@twitter</td>
-            </tr>
-          </tbody>
-        </Table>
-      </ComponentCard>
-
-      {/*--------------------------------------------------------------------------------*/}
-      {/* Bordered Table                                                                 */}
-      {/*--------------------------------------------------------------------------------*/}
-
-      <ComponentCard
-        title="Bordered Table"
-        subtitle={
-          <p>
-            Use <code>bordered</code> to add zebra-striping to any table row within the
-            <code>&lt;tbody&gt;</code>.
-          </p>
-        }
-      >
-        <Table bordered responsive>
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">First</th>
-              <th scope="col">Last</th>
-              <th scope="col">Handle</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Jacob</td>
-              <td>Thornton</td>
-              <td>@fat</td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td>Larry</td>
-              <td>the Bird</td>
-              <td>@twitter</td>
-            </tr>
-          </tbody>
-        </Table>
-      </ComponentCard>
-
-      {/*--------------------------------------------------------------------------------*/}
-      {/* Hoverable Rows                                                                 */}
-      {/*--------------------------------------------------------------------------------*/}
-
-      <ComponentCard
-        title="Hoverable Rows"
-        subtitle={
-          <p>
-            Use <code>hover</code> to add zebra-striping to any table row within the{' '}
-            <code>&lt;tbody&gt;</code>.
-          </p>
-        }
-      >
-        <Table hover responsive>
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">First</th>
-              <th scope="col">Last</th>
-              <th scope="col">Handle</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Jacob</td>
-              <td>Thornton</td>
-              <td>@fat</td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td>Larry</td>
-              <td>the Bird</td>
-              <td>@twitter</td>
-            </tr>
-          </tbody>
-        </Table>
-      </ComponentCard>
-
-      {/*--------------------------------------------------------------------------------*/}
-      {/* Responsive Table                                                               */}
-      {/*--------------------------------------------------------------------------------*/}
-
-      <ComponentCard
-        title="Responsive Table"
-        subtitle={
-          <p>
-            Use <code>responsive</code> to add zebra-striping to any table row within the{' '}
-            <code>&lt;tbody&gt;</code>.
-          </p>
-        }
-      >
-        <Table responsive>
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Heading</th>
-              <th scope="col">Heading</th>
-              <th scope="col">Heading</th>
-              <th scope="col">Heading</th>
-              <th scope="col">Heading</th>
-              <th scope="col">Heading</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Cell</td>
-              <td>Cell</td>
-              <td>Cell</td>
-              <td>Cell</td>
-              <td>Cell</td>
-              <td>Cell</td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Cell</td>
-              <td>Cell</td>
-              <td>Cell</td>
-              <td>Cell</td>
-              <td>Cell</td>
-              <td>Cell</td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td>Cell</td>
-              <td>Cell</td>
-              <td>Cell</td>
-              <td>Cell</td>
-              <td>Cell</td>
-              <td>Cell</td>
-            </tr>
-          </tbody>
-        </Table>
-      </ComponentCard>
-
-      {/*--------------------------------------------------------------------------------*/}
-      {/*End Inner Div*/}
-      {/*--------------------------------------------------------------------------------*/}
     </>
   );
 };

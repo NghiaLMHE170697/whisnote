@@ -5,13 +5,11 @@ import SimpleBar from 'simplebar-react';
 import {
   Navbar,
   Nav,
-  NavItem,
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
   Button,
-  Input,
   Badge
 } from 'reactstrap';
 import { MessageSquare, ArrowUpRight, CheckCircle } from 'react-feather';
@@ -94,15 +92,6 @@ const Header = () => {
 
       <Nav className="me-auto d-none d-lg-flex" navbar>
 
-        <NavItem className="app-search ps-3">
-          <Input
-            id="txt-srch"
-            name="search"
-            placeholder="Search & Enter"
-            className="rounded-pill"
-            type="text"
-          />
-        </NavItem>
       </Nav>
 
       <div className="d-flex align-items-center">

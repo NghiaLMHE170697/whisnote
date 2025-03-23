@@ -3,6 +3,7 @@ const { uploadImageFile } = require("../cloudFly.config/objectStorage");
 const JwtProvider = require("../provider/JwtProvider");
 const bcrypt = require('bcrypt');
 const mongoose = require("mongoose");
+const { getVietNamDateFormat } = require("../middleware/general.middleware.js");
 
 // 📌 Đăng ký với số điện thoại & Gửi OTP
 exports.register = async (req, res) => {
@@ -317,5 +318,84 @@ exports.updateProfile = async (req, res) => {
   }
 }
 
+exports.getUsers = async (req, res) => {
+  try {
+    // Pagination parameters
+    const page = parseInt(req.query.page) || 1;
+    const limit = 5;
+    const skip = (page - 1) * limit;
+
+    // Get total user count for pagination info
+    const totalUsers = await User.countDocuments();
+    const totalPages = Math.ceil(totalUsers / limit);
+
+    // Validate page number
+    if (page < 1 || page > totalPages) {
+      return res.status(400).json({
+        error: `Invalid page number. Valid pages: 1-${totalPages}`
+      });
+    }
+
+    // Get paginated users with selected fields
+    const users = await User.find({})
+      .select('username email role avatar createdAt')
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean(); 
+
+    if (users.length === 0) {
+      return res.status(404).json({
+        message: 'No users found',
+        data: []
+      });
+    }
+
+    res.json({
+      status: 'success',
+      pagination: {
+        totalRecords: totalUsers,
+        currentPage: page,
+        totalPages: totalPages,
+        recordsPerPage: limit
+      },
+      data: users.map(u => ({
+        ...u,
+        createdAt: getVietNamDateFormat(u.createdAt)
+      }))
+    });
+
+  } catch (error) {
+    console.error('🚨 Error fetching users:', error);
+    res.status(500).json({
+      error: 'Server error while fetching users',
+      details: error.message
+    });
+  }
+};
+
+exports.countUserRoles = async (req, res) => {
+  try {
+    const totalUsers = await User.countDocuments();
+    const freeUsers = await User.countDocuments({ role: 'free' });
+    const premiumUsers = await User.countDocuments({ role: 'premium' });
+
+    res.json({
+      success: true,
+      data: {
+        total: totalUsers,
+        free: freeUsers,
+        premium: premiumUsers
+      }
+    });
+    
+  } catch (error) {
+    console.error('Error counting users:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Could not count users'
+    });
+  }
+};
 
 

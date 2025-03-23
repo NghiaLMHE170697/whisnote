@@ -65,7 +65,7 @@ const Home = Loadable(lazy(() => import('../views/Home')));
 // const FormSteps = Loadable(lazy(() => import('../views/form-steps/Steps')));
 // const FormEditor = Loadable(lazy(() => import('../views/form-editor/FormEditor')));
 /***** Table Pages ****/
-// const Basictable = Loadable(lazy(() => import('../views/tables/TableBasic')));
+const Basictable = Loadable(lazy(() => import('../views/tables/TableBasic')));
 // const CustomReactTable = Loadable(lazy(() => import('../views/tables/CustomReactTable')));
 // const ReactBootstrapTable = Loadable(lazy(() => import('../views/tables/ReactBootstrapTable')));
 
@@ -117,6 +117,7 @@ const ThemeRoutes = [
       { path: '/post/:postId', name: 'Post Detail', exact: true, element: <ProtectedRoutes element={ViewPostDetail} /> },
       { path: '/pricing', name: 'Pricing', exact: true, element: <ProtectedRoutes element={Pricing} /> },
       { path: '*', element: <Navigate to="/auth/404" /> },
+      { path: '/admin/user', name: 'User List', exact: true, element: <ProtectedRoutes element={Basictable} /> },
     ],
   },
   {

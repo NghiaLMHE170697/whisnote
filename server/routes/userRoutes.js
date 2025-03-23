@@ -1,5 +1,5 @@
 const express = require("express");
-const { register, login, getProfile, verifyOTP, upgradePlan, updateProfile } = require("../controllers/userController");
+const { register, login, getProfile, verifyOTP, upgradePlan, updateProfile, getUsers, countUserRoles } = require("../controllers/userController");
 const router = express.Router();
 const multer = require("multer");
 
@@ -17,6 +17,8 @@ router.post("/verify-otp", verifyOTP); // Xác nhận OTP & đăng ký
 // Xem thông tin người dùng
 router.get("/:userId", getProfile);
 router.post("/upgrade-plan", upgradePlan);
-router.put("/update-profile/:userId", upload.single("avatar"), updateProfile)
+router.put("/update-profile/:userId", upload.single("avatar"), updateProfile);
+router.get("/admin/user/list", getUsers);
+router.get("/admin/user/role-counts", countUserRoles);
 
 module.exports = router;

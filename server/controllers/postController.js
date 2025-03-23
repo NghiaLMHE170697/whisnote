@@ -320,6 +320,75 @@ const getTextfromAudio = async (req, res) => {
   }
 }
 
+// Tìm kiếm bài đăng public
+const searchPublicPosts = async (req, res) => {
+  try {
+    const { query } = req.query;
+    const { userId } = req.params
+    if (!query) {
+      return res.status(400).json({
+        message: "Vui lòng nhập từ khóa tìm kiếm"
+      });
+    }
+
+    // Tìm kiếm chỉ bài public
+    const posts = await Post.find({
+      content: { $regex: query, $options: 'i' },
+      privacy: "public"  // Chỉ lấy bài public
+    })
+      .populate("user_id", "username avatar")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      status: "success",
+      results: posts.length,
+      data: posts.map(m => transformPost(m, userId))
+    });
+  } catch (error) {
+    console.error("Search public posts error:", error);
+    res.status(500).json({
+      message: "Server error",
+      error: error.message
+    });
+  }
+};
+
+// Filter bài đăng public theo category
+const getPublicPostsByCategory = async (req, res) => {
+  try {
+    const { category, userId } = req.params;
+
+    // Tìm kiếm category
+    const categoryExists = await Category.findOne({ name: category });
+
+    if (!categoryExists) {
+      return res.status(404).json({
+        message: "Category không tồn tại"
+      });
+    }
+
+    // Lấy bài đăng public theo category
+    const posts = await Post.find({
+      category: categoryExists.name,
+      privacy: "public"
+    })
+      .populate("user_id", "username avatar")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      status: "success",
+      results: posts.length,
+      data: posts.map(m => transformPost(m, userId))
+    });
+  } catch (error) {
+    console.error("Get public posts by category error:", error);
+    res.status(500).json({
+      message: "Server error",
+      error: error.message
+    });
+  }
+};
+
 module.exports = {
   createPost,
   getPublicPosts,
@@ -329,4 +398,6 @@ module.exports = {
   updateLikePost,
   getPostById,
   getTextfromAudio,
+  searchPublicPosts,
+  getPublicPostsByCategory,
 };

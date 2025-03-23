@@ -30,5 +30,7 @@ router.get("/profile/:userId/:currentUserId", postController.getProfilePosts); /
 router.get("/:postId/:userId", postController.getPostById);
 router.post("/like/:postId", postController.updateLikePost);
 router.post("/audio-to-text", upload.single('audio'), postController.getTextfromAudio);
+router.get('/public/search/:userId', postController.searchPublicPosts);
+router.get('/public/category/:category/:userId', postController.getPublicPostsByCategory);
 
 module.exports = router;
