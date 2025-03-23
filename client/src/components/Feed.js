@@ -194,7 +194,7 @@ const Feed = () => {
                                                 {post.username}
                                             </a>
                                             <span className="ms-2 text-muted">{post.createdAt}</span>
-                                            <p className="mt-2 ms-3" onClick={() => nav(`/post/${post.id}`)}>
+                                            <p className="mt-2 ms-3">
                                                 {post.content}
                                             </p>
                                             {post.medias.length > 0 && (
@@ -227,15 +227,15 @@ const Feed = () => {
                                             )}
                                             <div className="desc ms-3">
                                                 <button
-                                                    className="text-decoration-none text-dark me-2 bg-transparent border-0"
+                                                    type="button" // Add explicit type
+                                                    className="text-decoration-none text-dark me-2 bg-transparent border-0 p-0"
                                                     onClick={() => handleLike(post.id)}
-                                                    aria-label={post?.liked ? "Unlike post" : "Like post"}
                                                 >
                                                     <i className={`bi ${post?.liked ? "bi-heart-fill" : "bi-heart"} me-2 text-danger`}></i>
-                                                    {post?.likesCount > 0 && `${post?.likesCount} `}Love
+                                                    {post?.likesCount || ''} Love
                                                 </button>
                                                 <a href={`/post/${post.id}`} className="text-decoration-none text-dark me-2" >
-                                                    <i className={`bi bi-chat-square-dots me-2 text-danger`}></i>
+                                                    <i className="bi bi-chat-square-dots me-2 text-danger"></i>
                                                     Comment
                                                 </a>
                                             </div>
