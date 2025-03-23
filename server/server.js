@@ -9,6 +9,8 @@ const rateLimit = require("express-rate-limit");
 const PayOS = require("@payos/node");
 require("dotenv").config();
 const db = require("./models");
+// Thêm import cho chức năng nhắc nhở
+const { startReminderSchedule, sendJournalReminder } = require("./utils/journalReminder");
 
 // Khởi tạo Express
 const app = express();
@@ -127,6 +129,18 @@ app.post("/create-payment-link", async (req, res) => {
     }
 });
 
+// Thêm route để test gửi email
+app.get("/test-reminder", async (req, res) => {
+    try {
+        console.log("🧪 Đang test gửi email nhắc nhở...");
+        await sendJournalReminder();
+        res.status(200).json({ message: "Email nhắc nhở đã được gửi thành công!" });
+    } catch (error) {
+        console.error("❌ Lỗi khi gửi email test:", error);
+        res.status(500).json({ error: "Không thể gửi email nhắc nhở" });
+    }
+});
+
 // ❌ Xử lý lỗi 404 (Route không tồn tại)
 app.use((req, res, next) => {
     next(httpErrors(404, "Not Found"));
@@ -150,6 +164,8 @@ const PORT = process.env.PORT || 9999;
 db.connectDB().then(() => {
     app.listen(PORT, HOST, () => {
         console.log(`🚀 Server running at: http://${HOST}:${PORT}`);
+        // Khởi động lịch nhắc nhở sau khi server đã chạy
+        startReminderSchedule();
     });
 }).catch((err) => {
     console.error("❌ Failed to connect to database:", err);
